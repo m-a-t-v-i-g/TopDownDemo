@@ -1,6 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TopDownDemo/Public/Components/TDHealthComponent.h"
+#include "TDHealthComponent.h"
 
 UTDHealthComponent::UTDHealthComponent()
 {
