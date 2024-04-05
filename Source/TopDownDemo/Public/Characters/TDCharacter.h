@@ -34,4 +34,10 @@ protected:
 	
 	/** Аналог PreInitializeComponents для возможности создания компонентов из блупринтов. */
 	virtual void FindOrCreateComponents();
+	
+#pragma endregion Components
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
+	void ProcessInteraction(AActor* WithActor);
 };

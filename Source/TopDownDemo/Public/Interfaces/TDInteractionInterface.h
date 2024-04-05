@@ -15,4 +15,9 @@ class UTDInteractionInterface : public UInterface
 class TOPDOWNDEMO_API ITDInteractionInterface
 {
 	GENERATED_BODY()
+
+public:
+	bool bIsInteractable = true;
+
+	virtual void OnInteraction();
 };

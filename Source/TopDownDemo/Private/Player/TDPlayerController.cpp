@@ -5,7 +5,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "TDCharacter.h"
 #include "TDInteractionComponent.h"
+#include "TDInteractionInterface.h"
 
 FName ATDPlayerController::InteractionComponentName = FName("PlayerInteractionComponent");
 
@@ -58,6 +60,13 @@ void ATDPlayerController::FindOrCreateComponents()
 	}
 }
 
+void ATDPlayerController::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	InteractionComponent->OnInteractionDelegate.AddUObject(this, &ATDPlayerController::OnInteraction);
+}
+
 void ATDPlayerController::BindActions(UInputMappingContext* Context)
 {
 	check(Context);
@@ -81,6 +90,10 @@ void ATDPlayerController::IA_LeftClick(const FInputActionValue& Value)
 	{
 		FHitResult HitResult;
 		GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+
+		if (!IsValid(InteractionComponent)) return;
+		
+		InteractionComponent->ProcessInteraction(HitResult);
 	}
 }
 
@@ -91,4 +104,19 @@ void ATDPlayerController::IA_RightClick(const FInputActionValue& Value)
 		FHitResult HitResult;
 		GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
 	}
+}
+
+void ATDPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+}
+
+void ATDPlayerController::OnInteraction(AActor* TargetActor)
+{
+	GetTDCharacter()->ProcessInteraction(TargetActor);
+}
+
+ATDCharacter* ATDPlayerController::GetTDCharacter()
+{
+	return Cast<ATDCharacter>(GetCharacter());
 }

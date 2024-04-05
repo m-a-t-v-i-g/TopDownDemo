@@ -31,3 +31,12 @@ void ATDCharacter::FindOrCreateComponents()
 		InventoryComponent->RegisterComponent();
 	}
 }
+
+void ATDCharacter::ProcessInteraction(AActor* WithActor)
+{
+	float Distance = FVector::Distance(GetActorLocation(), WithActor->GetActorLocation());
+	if (Distance > 25.0f)
+	{
+		
+	}
+}

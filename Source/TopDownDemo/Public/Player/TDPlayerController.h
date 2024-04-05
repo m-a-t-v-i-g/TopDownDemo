@@ -10,6 +10,7 @@ struct FInputActionValue;
 
 class UInputMappingContext;
 class UTDInteractionComponent;
+class ATDCharacter;
 
 UCLASS()
 class TOPDOWNDEMO_API ATDPlayerController : public APlayerController
@@ -37,6 +38,8 @@ protected:
 	
 	/** Аналог PreInitializeComponents для возможности создания компонентов из блупринтов. */
 	virtual void FindOrCreateComponents();
+
+	virtual void PostInitializeComponents() override;
 	
 #pragma endregion Components
 
@@ -62,4 +65,12 @@ protected:
 	void IA_RightClick(const FInputActionValue& Value);
 
 #pragma endregion Input
+
+	virtual void OnPossess(APawn* InPawn) override;
+	
+	void OnInteraction(AActor* TargetActor);
+
+protected:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Pawn")
+	ATDCharacter* GetTDCharacter();
 };
