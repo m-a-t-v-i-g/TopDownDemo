@@ -29,6 +29,7 @@ void ATDPlayerController::SetupInputComponent()
 	{
 		FModifyContextOptions Options;
 		Options.bForceImmediately = 1;
+		
 		Subsystem->AddMappingContext(InputContext, 1, Options);
 	}
 	
