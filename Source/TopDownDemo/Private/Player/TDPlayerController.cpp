@@ -8,6 +8,7 @@
 #include "TDCharacter.h"
 #include "TDInteractionComponent.h"
 #include "TDInteractionInterface.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 FName ATDPlayerController::InteractionComponentName = FName("PlayerInteractionComponent");
 
@@ -86,24 +87,20 @@ void ATDPlayerController::BindActions(UInputMappingContext* Context)
 
 void ATDPlayerController::IA_LeftClick(const FInputActionValue& Value)
 {
-	if (Value.Get<bool>())
-	{
-		FHitResult HitResult;
-		GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+	FHitResult HitResult;
+	GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
 
-		if (!IsValid(InteractionComponent)) return;
-		
-		InteractionComponent->ProcessInteraction(HitResult);
-	}
+	if (!IsValid(InteractionComponent)) return;
+
+	InteractionComponent->ProcessInteraction(HitResult);
 }
 
 void ATDPlayerController::IA_RightClick(const FInputActionValue& Value)
 {
-	if (Value.Get<bool>())
-	{
-		FHitResult HitResult;
-		GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
-	}
+	FHitResult HitResult;
+	GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitResult.Location);
 }
 
 void ATDPlayerController::OnPossess(APawn* InPawn)
@@ -113,7 +110,7 @@ void ATDPlayerController::OnPossess(APawn* InPawn)
 
 void ATDPlayerController::OnInteraction(AActor* TargetActor)
 {
-	GetTDCharacter()->ProcessInteraction(TargetActor);
+	GetTDCharacter()->TryInteract(TargetActor);
 }
 
 ATDCharacter* ATDPlayerController::GetTDCharacter()

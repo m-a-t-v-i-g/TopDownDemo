@@ -19,5 +19,5 @@ class TOPDOWNDEMO_API ITDInteractionInterface
 public:
 	bool bIsInteractable = true;
 
-	virtual void OnInteraction();
+	virtual void OnInteraction(AActor* Interactor);
 };

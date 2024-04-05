@@ -2,6 +2,6 @@
 
 #include "TDInteractionInterface.h"
 
-void ITDInteractionInterface::OnInteraction()
+void ITDInteractionInterface::OnInteraction(AActor* Interactor)
 {
 }

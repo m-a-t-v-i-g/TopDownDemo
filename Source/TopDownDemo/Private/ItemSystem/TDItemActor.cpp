@@ -33,7 +33,7 @@ void ATDItemActor::OnConstruction(const FTransform& Transform)
 	StaticMesh->SetStaticMesh(ItemAsset->GetStaticMesh());
 }
 
-void ATDItemActor::OnInteraction()
+void ATDItemActor::OnInteraction(AActor* Interactor)
 {
-	ITDInteractionInterface::OnInteraction();
+	ITDInteractionInterface::OnInteraction(Interactor);
 }

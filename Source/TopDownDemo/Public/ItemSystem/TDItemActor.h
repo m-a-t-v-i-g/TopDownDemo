@@ -21,7 +21,7 @@ public:
 	virtual void PostInitializeComponents() override;
 	virtual void OnConstruction(const FTransform& Transform) override;
 
-	virtual void OnInteraction() override;
+	virtual void OnInteraction(AActor* Interactor) override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
