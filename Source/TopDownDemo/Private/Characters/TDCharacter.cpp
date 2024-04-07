@@ -4,9 +4,11 @@
 #include "TDInteractionInterface.h"
 #include "TDInventoryComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Equipment/TDEquipmentComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 
 FName ATDCharacter::InventoryComponentName = FName("CharacterInventoryComp");
+FName ATDCharacter::EquipmentComponentName = FName("CharacterEquipmentComp");
 
 ATDCharacter::ATDCharacter()
 {
@@ -18,6 +20,11 @@ void ATDCharacter::PreInitializeComponents()
 {
 	FindOrCreateComponents();
 	Super::PreInitializeComponents();
+}
+
+void ATDCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 }
 
 void ATDCharacter::FindOrCreateComponents()
@@ -33,6 +40,12 @@ void ATDCharacter::FindOrCreateComponents()
 		InventoryComponent = NewObject<UTDInventoryComponent>(this, InventoryComponentClass, InventoryComponentName);
 		InventoryComponent->RegisterComponent();
 	}
+	EquipmentComponent = GetComponentByClass<UTDEquipmentComponent>();
+	if (!EquipmentComponent)
+	{
+		EquipmentComponent = NewObject<UTDEquipmentComponent>(this, EquipmentComponentClass, EquipmentComponentName);
+		EquipmentComponent->RegisterComponent();
+	}
 }
 
 void ATDCharacter::TryInteract(AActor* WithActor)
@@ -41,7 +54,8 @@ void ATDCharacter::TryInteract(AActor* WithActor)
 	
 	TargetToInteract = WithActor;
 
-	/* Расчитаем дистанцию на проекции XY, и, если она больше указанной, подходим к предмету на минимальное расстояние. */
+	/* Расчитаем дистанцию до предмета на плоскости XY, и, если она больше указанной, подходим к предмету на минимальное
+	 * расстояние. */
 	float Distance = FVector::Dist2D(GetActorLocation(), TargetToInteract->GetActorLocation());
 	if (Distance > 100.0f)
 	{
@@ -71,6 +85,7 @@ void ATDCharacter::ProcessInteraction()
 
 void ATDCharacter::InteractAfterMoving(FAIRequestID RequestID, const FPathFollowingResult& FollowResult)
 {
+	/* Удаляем связанный делегат и вызываем интеракшн. */
 	FollowingComponent->OnRequestFinished.Remove(StopMovingDelegate);
 	ProcessInteraction();
 }

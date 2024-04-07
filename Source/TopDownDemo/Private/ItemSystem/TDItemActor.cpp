@@ -1,8 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ItemSystem/TDItemActor.h"
+#include "TDItemActor.h"
+#include "TDInventoryComponent.h"
+#include "Assets/TDItemAsset.h"
 #include "Components/SphereComponent.h"
-#include "ItemSystem/Assets/TDItemAsset.h"
+#include "Objects/TDItemObject.h"
 
 ATDItemActor::ATDItemActor()
 {
@@ -35,5 +37,23 @@ void ATDItemActor::OnConstruction(const FTransform& Transform)
 
 void ATDItemActor::OnInteraction(AActor* Interactor)
 {
-	ITDInteractionInterface::OnInteraction(Interactor);
+	if (UTDInventoryComponent* FindInventory = Interactor->FindComponentByClass<UTDInventoryComponent>())
+	{
+		UTDItemObject* ItemObject = CreateItemObject(UTDItemObject::StaticClass());
+		check(ItemObject);
+		
+		FindInventory->AddItem(ItemObject);
+		Destroy();
+	}
+}
+
+UTDItemObject* ATDItemActor::CreateItemObject(UClass* ItemObjectClass)
+{
+	UTDItemObject* CreatedItemObject = nullptr;
+	if (ItemObjectClass->IsChildOf<UTDItemObject>())
+	{
+		CreatedItemObject = NewObject<UTDItemObject>(GetTransientPackage(), ItemObjectClass);
+		*CreatedItemObject = this;
+	}
+	return CreatedItemObject;
 }

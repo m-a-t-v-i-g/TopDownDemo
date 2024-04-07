@@ -7,7 +7,6 @@
 #include "InputMappingContext.h"
 #include "TDCharacter.h"
 #include "TDInteractionComponent.h"
-#include "TDInteractionInterface.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
 FName ATDPlayerController::InteractionComponentName = FName("PlayerInteractionComponent");

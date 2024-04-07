@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "TDInteractionInterface.h"
 #include "GameFramework/Actor.h"
+#include "Objects/TDItemObject.h"
 #include "TDItemActor.generated.h"
 
-class USphereComponent;
 class UTDItemAsset;
 
 UCLASS()
@@ -23,13 +23,25 @@ public:
 
 	virtual void OnInteraction(AActor* Interactor) override;
 
+	virtual UTDItemObject* CreateItemObject(UClass* ItemObjectClass);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
-	TObjectPtr<USphereComponent> SphereCollision;
+	TObjectPtr<class USphereComponent> SphereCollision;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
 	TObjectPtr<UStaticMeshComponent> StaticMesh;
 	
 	UPROPERTY(EditAnywhere, Category = "Item")
 	TObjectPtr<UTDItemAsset> ItemAsset;
+	
+	UPROPERTY(EditInstanceOnly, Category = "Item")
+	FTDItemParams ItemParams;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
+	FORCEINLINE UTDItemAsset* GetItemAsset() const { return ItemAsset; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
+	FORCEINLINE FTDItemParams GetItemParams() const { return ItemParams; }
 };

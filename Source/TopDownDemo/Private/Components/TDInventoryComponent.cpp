@@ -6,3 +6,10 @@ UTDInventoryComponent::UTDInventoryComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
+
+void UTDInventoryComponent::AddItem(UTDItemObject* ItemObject)
+{
+	check(!InventoryItems.Contains(ItemObject));
+
+	InventoryItems.Add(ItemObject);
+}

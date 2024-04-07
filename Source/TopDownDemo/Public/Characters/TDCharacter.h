@@ -10,6 +10,7 @@ struct FAIRequestID;
 struct FPathFollowingResult;
 
 class UTDInventoryComponent;
+class UTDEquipmentComponent;
 
 UCLASS()
 class TOPDOWNDEMO_API ATDCharacter : public ACharacter
@@ -23,6 +24,7 @@ public:
 	
 public:
 	virtual void PreInitializeComponents() override final;
+	virtual void PostInitializeComponents() override;
 
 	/** Класс компонента инвентаря на случай, если не создан экземпляр из блупринта. */
 	UPROPERTY(EditAnywhere, Category = "Inventory")
@@ -30,10 +32,20 @@ public:
 	
 	static FName InventoryComponentName;
 	
+	/** Класс компонента экипировки на случай, если не создан экземпляр из блупринта. */
+	UPROPERTY(EditAnywhere, Category = "Equipment")
+	TSubclassOf<UTDEquipmentComponent> EquipmentComponentClass;
+	
+	static FName EquipmentComponentName;
+	
 protected:
 	/** Компонент инвентаря. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TObjectPtr<UTDInventoryComponent> InventoryComponent;
+	
+	/** Компонент инвентаря. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
+	TObjectPtr<UTDEquipmentComponent> EquipmentComponent;
 
 	/** Аналог PreInitializeComponents для возможности создания компонентов из блупринтов. */
 	virtual void FindOrCreateComponents();

@@ -2,7 +2,6 @@
 
 #include "TDInteractionComponent.h"
 #include "TDInteractionInterface.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 UTDInteractionComponent::UTDInteractionComponent()
 {
@@ -17,6 +16,5 @@ void UTDInteractionComponent::ProcessInteraction(const FHitResult& HitResult)
 	if (HitActor->Implements<UTDInteractionInterface>())
 	{
 		OnInteractionDelegate.Broadcast(HitActor);
-		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("Target actor: %s."), *HitActor->GetName()), true, false);
 	}
 }

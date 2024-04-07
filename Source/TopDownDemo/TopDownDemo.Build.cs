@@ -26,6 +26,7 @@ public class TopDownDemo : ModuleRules
 			"TopDownDemo/Public/Characters",
 			"TopDownDemo/Public/Components",
 			"TopDownDemo/Public/Interfaces",
+			"TopDownDemo/Public/ItemSystem",
 			"TopDownDemo/Public/Player"
 		});
 		
@@ -35,6 +36,7 @@ public class TopDownDemo : ModuleRules
 			"TopDownDemo/Private/Characters",
 			"TopDownDemo/Private/Components",
 			"TopDownDemo/Private/Interfaces",
+			"TopDownDemo/Private/ItemSystem",
 			"TopDownDemo/Private/Player"
 		});
 	}

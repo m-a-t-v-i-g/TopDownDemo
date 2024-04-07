@@ -7,8 +7,9 @@
 #include "TDInventoryComponent.generated.h"
 
 class UTDItemAsset;
+class UTDItemObject;
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(Blueprintable, BlueprintType, ClassGroup = "TopDownDemo")
 class TOPDOWNDEMO_API UTDInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -16,7 +17,9 @@ class TOPDOWNDEMO_API UTDInventoryComponent : public UActorComponent
 public:
 	UTDInventoryComponent();
 
+	void AddItem(UTDItemObject* ItemObject);
+
 protected:
 	UPROPERTY(EditInstanceOnly, Category = "Inventory")
-	TMap<UTDItemAsset*, int> InventoryItems;
+	TArray<UTDItemObject*> InventoryItems;
 };
