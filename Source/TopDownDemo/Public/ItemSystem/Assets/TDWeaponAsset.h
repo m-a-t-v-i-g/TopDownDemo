@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TDItemAsset.h"
+#include "Equipment/TDEquipmentComponent.h"
 #include "TDWeaponAsset.generated.h"
 
 UCLASS()
@@ -11,7 +12,10 @@ class TOPDOWNDEMO_API UTDWeaponAsset : public UTDItemAsset
 {
 	GENERATED_BODY()
 
-protected:
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	ETDEquipmentType EquipmentType = ETDEquipmentType::None;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	int MaxRounds = 0;
 

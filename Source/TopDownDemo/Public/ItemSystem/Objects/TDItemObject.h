@@ -32,4 +32,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Item")
 	FTDItemParams ItemParams;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
+	FORCEINLINE UTDItemAsset* GetItemAsset() const { return ItemAsset; }
 };

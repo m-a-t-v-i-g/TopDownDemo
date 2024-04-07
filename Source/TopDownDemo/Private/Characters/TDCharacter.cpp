@@ -13,6 +13,8 @@ FName ATDCharacter::EquipmentComponentName = FName("CharacterEquipmentComp");
 ATDCharacter::ATDCharacter()
 {
 	InventoryComponentClass = UTDInventoryComponent::StaticClass();
+	EquipmentComponentClass = UTDEquipmentComponent::StaticClass();
+	
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -20,11 +22,6 @@ void ATDCharacter::PreInitializeComponents()
 {
 	FindOrCreateComponents();
 	Super::PreInitializeComponents();
-}
-
-void ATDCharacter::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
 }
 
 void ATDCharacter::FindOrCreateComponents()
@@ -46,6 +43,14 @@ void ATDCharacter::FindOrCreateComponents()
 		EquipmentComponent = NewObject<UTDEquipmentComponent>(this, EquipmentComponentClass, EquipmentComponentName);
 		EquipmentComponent->RegisterComponent();
 	}
+}
+
+void ATDCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	check(EquipmentComponent);
+	EquipmentComponent->InitEquipment();
 }
 
 void ATDCharacter::TryInteract(AActor* WithActor)

@@ -24,7 +24,6 @@ public:
 	
 public:
 	virtual void PreInitializeComponents() override final;
-	virtual void PostInitializeComponents() override;
 
 	/** Класс компонента инвентаря на случай, если не создан экземпляр из блупринта. */
 	UPROPERTY(EditAnywhere, Category = "Inventory")
@@ -63,6 +62,8 @@ private:
 #pragma endregion Cache
 
 public:
+	virtual void PossessedBy(AController* NewController) override;
+	
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
 	void TryInteract(AActor* WithActor);
 

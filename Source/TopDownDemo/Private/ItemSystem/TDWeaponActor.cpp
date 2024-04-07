@@ -12,19 +12,27 @@ ATDWeaponActor::ATDWeaponActor()
 
 void ATDWeaponActor::OnInteraction(AActor* Interactor)
 {
+	UTDWeaponObject* WeaponObject = Cast<UTDWeaponObject>(CreateItemObject(UTDWeaponObject::StaticClass()));
+	check(WeaponObject);
+
 	if (UTDEquipmentComponent* FindEquipment = Interactor->FindComponentByClass<UTDEquipmentComponent>())
 	{
-		UTDWeaponObject* WeaponObject = Cast<UTDWeaponObject>(CreateItemObject(UTDWeaponObject::StaticClass()));
-		check(WeaponObject);
+		if (FindEquipment->IsAnySlotAvailable(WeaponObject))
+		{
+			FindEquipment->EquipItem(WeaponObject);
+			Destroy();
+			return;
+		}
 	}
-	else if (UTDInventoryComponent* FindInventory = Interactor->FindComponentByClass<UTDInventoryComponent>())
+	
+	if (UTDInventoryComponent* FindInventory = Interactor->FindComponentByClass<UTDInventoryComponent>())
 	{
-		UTDWeaponObject* WeaponObject = Cast<UTDWeaponObject>(CreateItemObject(UTDWeaponObject::StaticClass()));
-		check(WeaponObject);
-		
 		FindInventory->AddItem(WeaponObject);
+		Destroy();
+		return;
 	}
-	Destroy();
+
+	WeaponObject->MarkAsGarbage();
 }
 
 UTDItemObject* ATDWeaponActor::CreateItemObject(UClass* WeaponObjectClass)

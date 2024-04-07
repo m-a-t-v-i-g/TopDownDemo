@@ -19,7 +19,7 @@ public:
 
 	void AddItem(UTDItemObject* ItemObject);
 
-protected:
+private:
 	UPROPERTY(EditInstanceOnly, Category = "Inventory")
 	TArray<UTDItemObject*> InventoryItems;
 };

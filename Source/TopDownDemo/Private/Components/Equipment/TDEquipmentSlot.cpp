@@ -5,6 +5,7 @@
 
 UTDEquipmentSlot::UTDEquipmentSlot()
 {
+	Equipment = GetTypedOuter<UTDEquipmentComponent>();
 	SlotType = ETDEquipmentType::None;
 }
 
@@ -16,6 +17,12 @@ void UTDEquipmentSlot::PostInitProperties()
 	{
 		Equipment->AddEquipmentSlot(this);
 	}
+}
+
+void UTDEquipmentSlot::InitSlot(FTDEquipmentSlotParams SlotParams)
+{
+	SlotName = SlotParams.SlotName;
+	SlotType = SlotParams.SlotType;
 }
 
 void UTDEquipmentSlot::EquipSlot(UTDWeaponObject* NewItemObject)

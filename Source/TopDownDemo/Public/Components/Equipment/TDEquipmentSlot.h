@@ -9,6 +9,8 @@
 
 class UTDWeaponObject;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSlotChangedDelegate, bool)
+
 UCLASS()
 class TOPDOWNDEMO_API UTDEquipmentSlot : public UObject
 {
@@ -18,6 +20,8 @@ public:
 	UTDEquipmentSlot();
 	
 	virtual void PostInitProperties() override;
+
+	void InitSlot(FTDEquipmentSlotParams SlotParams);
 
 	void EquipSlot(UTDWeaponObject* NewItemObject);
 	void UnequipSlot(UTDWeaponObject* OldItemObject);
@@ -29,12 +33,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Slot")
 	ETDEquipmentType SlotType;
 
+public:
+	FName GetSlotName() const { return SlotName; }
+	ETDEquipmentType GetSlotType() const { return SlotType; }
+	
 private:
 	TObjectPtr<UTDEquipmentComponent> Equipment;
-
 	TObjectPtr<UTDWeaponObject> ItemObject;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Slot")
 	bool bEquipped = false;
+
+	FOnSlotChangedDelegate OnSlotChangedDelegate;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Slot")
+	UTDWeaponObject* GetWeaponObject() const { return ItemObject; }
 };
