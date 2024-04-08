@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TDInteractionInterface.h"
+#include "TDSavableInterface.h"
 #include "GameFramework/Actor.h"
 #include "Objects/TDItemObject.h"
 #include "TDItemActor.generated.h"
@@ -11,7 +12,7 @@
 class UTDItemAsset;
 
 UCLASS()
-class TOPDOWNDEMO_API ATDItemActor : public AActor, public ITDInteractionInterface
+class TOPDOWNDEMO_API ATDItemActor : public AActor, public ITDInteractionInterface, public ITDSavableInterface
 {
 	GENERATED_BODY()
 

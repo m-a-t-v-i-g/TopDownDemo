@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TDSavableInterface.h"
 #include "GameFramework/Character.h"
 #include "TDCharacter.generated.h"
 
@@ -12,9 +13,10 @@ struct FPathFollowingResult;
 class UTDInventoryComponent;
 class UTDEquipmentComponent;
 class UTDWeaponComponent;
+class UTDHealthComponent;
 
 UCLASS()
-class TOPDOWNDEMO_API ATDCharacter : public ACharacter
+class TOPDOWNDEMO_API ATDCharacter : public ACharacter, public ITDSavableInterface
 {
 	GENERATED_BODY()
 
@@ -39,10 +41,16 @@ public:
 	static FName EquipmentComponentName;
 	
 	/** Класс компонента оружия на случай, если не создан экземпляр из блупринта. */
-	UPROPERTY(EditAnywhere, Category = "Equipment")
+	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<UTDWeaponComponent> WeaponComponentClass;
 	
 	static FName WeaponComponentName;
+	
+	/** Класс компонента здоровья на случай, если не создан экземпляр из блупринта. */
+	UPROPERTY(EditAnywhere, Category = "Health")
+	TSubclassOf<UTDHealthComponent> HealthComponentClass;
+	
+	static FName HealthComponentName;
 	
 protected:
 	/** Компонент инвентаря. */
@@ -54,8 +62,12 @@ protected:
 	TObjectPtr<UTDEquipmentComponent> EquipmentComponent;
 
 	/** Компонент оружия. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
 	TObjectPtr<UTDWeaponComponent> WeaponComponent;
+
+	/** Компонент здоровья. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	TObjectPtr<UTDHealthComponent> HealthComponent;
 
 	/** Аналог PreInitializeComponents для возможности создания компонентов из блупринтов. */
 	virtual void FindOrCreateComponents();
@@ -81,4 +93,13 @@ public:
 private:
 	void ProcessInteraction();
 	void InteractAfterMoving(FAIRequestID RequestID, const FPathFollowingResult& FollowResult);
+
+public:
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	                         AActor* DamageCauser) override;
+
+	void OnCharacterDead();
+	
+	UPROPERTY(EditAnywhere, Category = "Health")
+	bool bIsDead = false;
 };

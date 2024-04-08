@@ -4,4 +4,48 @@
 
 UTDHealthComponent::UTDHealthComponent()
 {
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
+void UTDHealthComponent::InitHealthComponent(bool bDead)
+{
+	if (bDead || Health <= 0.0f)
+	{
+		OnHealthChangedDelegate.Broadcast(0.0f);
+		return;
+	}
+	
+	if (Health > MaxHealth)
+	{
+		MaxHealth = Health;
+	}
+}
+
+void UTDHealthComponent::TakeDamage(float DamageValue) const
+{
+	if (IsHealthMinimum() || DamageValue <= 0.0f)
+	{
+		return;
+	}
+	float UpdateHealth = FMath::Clamp(Health - DamageValue, 0.0f, MaxHealth);
+	OnHealthChangedDelegate.Broadcast(UpdateHealth);
+}
+
+void UTDHealthComponent::SetHealth(float HealthValue)
+{
+	Health = HealthValue;
+	if (IsHealthMinimum())
+	{
+		CallDeath();
+	}
+}
+
+void UTDHealthComponent::CallDeath()
+{
+	OnOwnerDiedDelegate.Broadcast();
+}
+
+bool UTDHealthComponent::IsHealthMinimum() const
+{
+	return Health <= 0.0f;
 }

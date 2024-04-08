@@ -68,4 +68,6 @@ void ATDItemActor::SetHandedMode()
 {
 	SphereCollision->SetSimulatePhysics(false);
 	SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TDCharacter.h"
+#include "TDHealthComponent.h"
 #include "TDInteractionInterface.h"
 #include "TDInventoryComponent.h"
 #include "TDWeaponComponent.h"
@@ -11,12 +12,14 @@
 FName ATDCharacter::InventoryComponentName = FName("CharacterInventoryComp");
 FName ATDCharacter::EquipmentComponentName = FName("CharacterEquipmentComp");
 FName ATDCharacter::WeaponComponentName = FName("CharacterWeaponComp");
+FName ATDCharacter::HealthComponentName = FName("CharacterHealthComp");
 
 ATDCharacter::ATDCharacter()
 {
 	InventoryComponentClass = UTDInventoryComponent::StaticClass();
 	EquipmentComponentClass = UTDEquipmentComponent::StaticClass();
 	WeaponComponentClass = UTDWeaponComponent::StaticClass();
+	HealthComponentClass = UTDHealthComponent::StaticClass();
 	
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -54,6 +57,13 @@ void ATDCharacter::FindOrCreateComponents()
 		WeaponComponent = NewObject<UTDWeaponComponent>(this, WeaponComponentClass, WeaponComponentName);
 		WeaponComponent->RegisterComponent();
 	}
+	
+	HealthComponent = GetComponentByClass<UTDHealthComponent>();
+	if (!HealthComponent)
+	{
+		HealthComponent = NewObject<UTDHealthComponent>(this, HealthComponentClass, HealthComponentName);
+		HealthComponent->RegisterComponent();
+	}
 }
 
 void ATDCharacter::PossessedBy(AController* NewController)
@@ -62,6 +72,10 @@ void ATDCharacter::PossessedBy(AController* NewController)
 
 	check(EquipmentComponent);
 	EquipmentComponent->InitEquipment();
+
+	check(HealthComponent);
+	HealthComponent->OnOwnerDiedDelegate.AddUObject(this, &ATDCharacter::OnCharacterDead);
+	HealthComponent->InitHealthComponent(bIsDead);
 }
 
 void ATDCharacter::TryInteract(AActor* WithActor)
@@ -104,4 +118,16 @@ void ATDCharacter::InteractAfterMoving(FAIRequestID RequestID, const FPathFollow
 	/* Удаляем связанный делегат и вызываем интеракшн. */
 	FollowingComponent->OnRequestFinished.Remove(StopMovingDelegate);
 	ProcessInteraction();
+}
+
+float ATDCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+                               AActor* DamageCauser)
+{
+	HealthComponent->TakeDamage(DamageAmount);
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void ATDCharacter::OnCharacterDead()
+{
+	bIsDead = true;
 }
