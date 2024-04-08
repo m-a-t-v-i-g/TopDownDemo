@@ -47,6 +47,12 @@ void ATDItemActor::OnInteraction(AActor* Interactor)
 	}
 }
 
+void ATDItemActor::InitItem(UTDItemObject* ItemObject)
+{
+	ItemAsset = ItemObject->GetItemAsset();
+	ItemParams = ItemObject->GetItemParams();
+}
+
 UTDItemObject* ATDItemActor::CreateItemObject(UClass* ItemObjectClass)
 {
 	UTDItemObject* CreatedItemObject = nullptr;
@@ -56,4 +62,10 @@ UTDItemObject* ATDItemActor::CreateItemObject(UClass* ItemObjectClass)
 		*CreatedItemObject = this;
 	}
 	return CreatedItemObject;
+}
+
+void ATDItemActor::SetHandedMode()
+{
+	SphereCollision->SetSimulatePhysics(false);
+	SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

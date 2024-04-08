@@ -35,6 +35,19 @@ void ATDWeaponActor::OnInteraction(AActor* Interactor)
 	WeaponObject->MarkAsGarbage();
 }
 
+void ATDWeaponActor::InitItem(UTDItemObject* ItemObject)
+{
+	Super::InitItem(ItemObject);
+
+	auto WeaponObject = Cast<UTDWeaponObject>(ItemObject);
+	if (!WeaponObject)
+	{
+		return;
+	}
+
+	WeaponParams = WeaponObject->GetWeaponParams();
+}
+
 UTDItemObject* ATDWeaponActor::CreateItemObject(UClass* WeaponObjectClass)
 {
 	UTDWeaponObject* CreatedWeaponObject = nullptr;

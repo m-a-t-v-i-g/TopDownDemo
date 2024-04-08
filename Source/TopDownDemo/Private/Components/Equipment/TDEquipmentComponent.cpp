@@ -108,7 +108,7 @@ UTDEquipmentSlot* UTDEquipmentComponent::GetSlotByType(ETDEquipmentType Equipmen
 {
 	auto Slot = EquipmentSlots.FindByPredicate([EquipmentType](UTDEquipmentSlot* FindSlot)
 	{
-		return FindSlot->GetSlotType() == EquipmentType;
+		return FindSlot->GetSlotType() == EquipmentType && !FindSlot->bEquipped;
 	});
 	return *Slot;
 }

@@ -2,6 +2,7 @@
 
 #include "TDWeaponComponent.h"
 #include "TDWeaponActor.h"
+#include "GameFramework/Character.h"
 #include "Objects/TDWeaponObject.h"
 
 UTDWeaponComponent::UTDWeaponComponent()
@@ -18,31 +19,33 @@ void UTDWeaponComponent::UpdateBeltWeapon(FName SlotName, UTDWeaponObject* Weapo
 		{
 			return;
 		}
-		WeaponSlot->WeaponObject.Reset();	
 	}
 	
 	if (!IsValid(WeaponObject)) return;
 
-	ATDWeaponActor* BeltWeapon = SpawnWeaponOnBelt(WeaponObject);
+	ATDWeaponActor* BeltWeapon = SpawnWeaponOnBelt(SlotName, WeaponObject);
 	check(BeltWeapon);
 
 	BeltMap.Find(SlotName)->WeaponActor = BeltWeapon;
 }
 
-ATDWeaponActor* UTDWeaponComponent::SpawnWeaponOnBelt(UTDWeaponObject* FromObject)
+ATDWeaponActor* UTDWeaponComponent::SpawnWeaponOnBelt(FName SlotName, UTDWeaponObject* FromObject)
 {
-	ATDWeaponActor* SpawnedBeltFirst = GetWorld()->SpawnActor<ATDWeaponActor>(FromObject->ItemClass);
-	if (SpawnedBeltFirst)
+	ATDWeaponActor* Weapon = nullptr;
+	if (auto WeaponSlot = BeltMap.Find(SlotName))
 	{
+		ACharacter* Character = Cast<ACharacter>(GetOwner());
+		Weapon = GetWorld()->SpawnActor<ATDWeaponActor>(FromObject->ItemClass);
 		
-		/*
-		FAttachmentTransformRules AttachmentTransformRules {EAttachmentRule::SnapToTarget, false};
-		SpawnedBeltFirst->AttachToComponent(Character->GetMesh(), AttachmentTransformRules, AttachmentPoint);
-		SpawnedBeltFirst->FinishSpawning(SpawnTransform);
-		*/
-		
+		if (Weapon)
+		{
+			FAttachmentTransformRules AttachmentTransformRules{EAttachmentRule::SnapToTarget, false};
+			Weapon->InitItem(FromObject);
+			Weapon->SetHandedMode();
+			Weapon->AttachToComponent(Character->GetMesh(), AttachmentTransformRules, WeaponSlot->SocketName);
+		}
 	}
-	return SpawnedBeltFirst;
+	return Weapon;
 }
 
 bool UTDWeaponComponent::HasBeltWeapon(FName SlotName)
@@ -52,5 +55,5 @@ bool UTDWeaponComponent::HasBeltWeapon(FName SlotName)
 	{
 		return false;
 	}
-	return WeaponSlot->WeaponObject.IsValid();
+	return WeaponSlot->WeaponActor.IsValid();
 }

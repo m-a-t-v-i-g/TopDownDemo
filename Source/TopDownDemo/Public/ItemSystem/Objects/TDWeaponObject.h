@@ -28,4 +28,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	FTDWeaponParams WeaponParams;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	FORCEINLINE FTDWeaponParams GetWeaponParams() const { return WeaponParams; }
 };

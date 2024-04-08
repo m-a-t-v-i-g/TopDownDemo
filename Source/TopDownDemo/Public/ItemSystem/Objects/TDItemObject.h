@@ -39,4 +39,7 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
 	FORCEINLINE UTDItemAsset* GetItemAsset() const { return ItemAsset; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
+	FORCEINLINE FTDItemParams GetItemParams() const { return ItemParams; }
 };

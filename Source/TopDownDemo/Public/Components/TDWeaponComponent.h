@@ -13,15 +13,12 @@ USTRUCT(BlueprintType)
 struct FTDWeaponSlot
 {
 	GENERATED_USTRUCT_BODY()
-
+	
+	UPROPERTY(EditAnywhere, Category = "Slot")
+	FName SocketName;
+	
 	UPROPERTY(EditAnywhere, Category = "Slot")
 	TWeakObjectPtr<ATDWeaponActor> WeaponActor;
-
-	UPROPERTY(EditAnywhere, Category = "Slot")
-	TWeakObjectPtr<UTDWeaponObject> WeaponObject;
-
-	UPROPERTY(EditAnywhere, Category = "Slot")
-	ETDEquipmentType SlotType;
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = "TopDownDemo")
@@ -41,7 +38,7 @@ public:
 	void UpdateBeltWeapon(FName SlotName, UTDWeaponObject* WeaponObject);
 	
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	ATDWeaponActor* SpawnWeaponOnBelt(UTDWeaponObject* FromObject);
+	ATDWeaponActor* SpawnWeaponOnBelt(FName SlotName, UTDWeaponObject* FromObject);
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	bool HasBeltWeapon(FName SlotName);

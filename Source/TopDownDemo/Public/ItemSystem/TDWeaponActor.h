@@ -17,6 +17,8 @@ public:
 
 	virtual void OnInteraction(AActor* Interactor) override;
 
+	virtual void InitItem(UTDItemObject* ItemObject) override;
+
 	virtual UTDItemObject* CreateItemObject(UClass* WeaponObjectClass) override;
 	
 protected:

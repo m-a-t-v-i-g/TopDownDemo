@@ -23,6 +23,8 @@ public:
 
 	virtual void OnInteraction(AActor* Interactor) override;
 
+	virtual void InitItem(UTDItemObject* ItemObject);
+
 	virtual UTDItemObject* CreateItemObject(UClass* ItemObjectClass);
 
 protected:
@@ -39,6 +41,8 @@ protected:
 	FTDItemParams ItemParams;
 
 public:
+	void SetHandedMode();
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
 	FORCEINLINE UTDItemAsset* GetItemAsset() const { return ItemAsset; }
 
