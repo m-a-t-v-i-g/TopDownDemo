@@ -32,13 +32,29 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Weapon")
 	TObjectPtr<ATDWeaponActor> HandedWeapon;
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+	FName HandAttachPoint;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void UpdateHandedWeapon(int SlotIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void MoveHandedWeaponToBelt(FName& MovingSlot);
+
+protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TMap<FName, FTDWeaponSlot> BeltMap;
-	
+
+public:
 	void UpdateBeltWeapon(FName SlotName, UTDWeaponObject* WeaponObject);
 	
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	ATDWeaponActor* SpawnWeaponOnBelt(FName SlotName, UTDWeaponObject* FromObject);
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	bool HasHandedWeapon();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	bool HasBeltWeapon(FName SlotName);
