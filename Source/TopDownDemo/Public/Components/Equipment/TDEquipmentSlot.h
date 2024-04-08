@@ -9,7 +9,7 @@
 
 class UTDWeaponObject;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnSlotChangedDelegate, bool)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSlotChangedDelegate, UTDWeaponObject*, bool)
 
 UCLASS()
 class TOPDOWNDEMO_API UTDEquipmentSlot : public UObject

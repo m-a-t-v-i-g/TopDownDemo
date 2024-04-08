@@ -29,10 +29,12 @@ void UTDEquipmentSlot::EquipSlot(UTDWeaponObject* NewItemObject)
 {
 	ItemObject = NewItemObject;
 	bEquipped = true;
+	OnSlotChangedDelegate.Broadcast(ItemObject, bEquipped);
 }
 
 void UTDEquipmentSlot::UnequipSlot(UTDWeaponObject* OldItemObject)
 {
 	ItemObject = nullptr;
 	bEquipped = false;
+	OnSlotChangedDelegate.Broadcast(ItemObject, bEquipped);
 }

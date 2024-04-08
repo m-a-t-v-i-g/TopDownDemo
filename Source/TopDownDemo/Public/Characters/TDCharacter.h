@@ -11,6 +11,7 @@ struct FPathFollowingResult;
 
 class UTDInventoryComponent;
 class UTDEquipmentComponent;
+class UTDWeaponComponent;
 
 UCLASS()
 class TOPDOWNDEMO_API ATDCharacter : public ACharacter
@@ -37,14 +38,24 @@ public:
 	
 	static FName EquipmentComponentName;
 	
+	/** Класс компонента оружия на случай, если не создан экземпляр из блупринта. */
+	UPROPERTY(EditAnywhere, Category = "Equipment")
+	TSubclassOf<UTDWeaponComponent> WeaponComponentClass;
+	
+	static FName WeaponComponentName;
+	
 protected:
 	/** Компонент инвентаря. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TObjectPtr<UTDInventoryComponent> InventoryComponent;
 	
-	/** Компонент инвентаря. */
+	/** Компонент экипировки. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
 	TObjectPtr<UTDEquipmentComponent> EquipmentComponent;
+
+	/** Компонент оружия. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
+	TObjectPtr<UTDWeaponComponent> WeaponComponent;
 
 	/** Аналог PreInitializeComponents для возможности создания компонентов из блупринтов. */
 	virtual void FindOrCreateComponents();

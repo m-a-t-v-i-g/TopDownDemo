@@ -3,17 +3,20 @@
 #include "TDCharacter.h"
 #include "TDInteractionInterface.h"
 #include "TDInventoryComponent.h"
+#include "TDWeaponComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Equipment/TDEquipmentComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 
 FName ATDCharacter::InventoryComponentName = FName("CharacterInventoryComp");
 FName ATDCharacter::EquipmentComponentName = FName("CharacterEquipmentComp");
+FName ATDCharacter::WeaponComponentName = FName("CharacterWeaponComp");
 
 ATDCharacter::ATDCharacter()
 {
 	InventoryComponentClass = UTDInventoryComponent::StaticClass();
 	EquipmentComponentClass = UTDEquipmentComponent::StaticClass();
+	WeaponComponentClass = UTDWeaponComponent::StaticClass();
 	
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -37,11 +40,19 @@ void ATDCharacter::FindOrCreateComponents()
 		InventoryComponent = NewObject<UTDInventoryComponent>(this, InventoryComponentClass, InventoryComponentName);
 		InventoryComponent->RegisterComponent();
 	}
+	
 	EquipmentComponent = GetComponentByClass<UTDEquipmentComponent>();
 	if (!EquipmentComponent)
 	{
 		EquipmentComponent = NewObject<UTDEquipmentComponent>(this, EquipmentComponentClass, EquipmentComponentName);
 		EquipmentComponent->RegisterComponent();
+	}
+
+	WeaponComponent = GetComponentByClass<UTDWeaponComponent>();
+	if (!WeaponComponent)
+	{
+		WeaponComponent = NewObject<UTDWeaponComponent>(this, WeaponComponentClass, WeaponComponentName);
+		WeaponComponent->RegisterComponent();
 	}
 }
 

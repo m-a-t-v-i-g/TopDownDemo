@@ -26,6 +26,9 @@ class TOPDOWNDEMO_API UTDItemObject : public UObject
 public:
 	void operator=(const ATDItemActor* ItemActor);
 
+	UPROPERTY(EditAnywhere, Category = "Item")
+	TSubclassOf<ATDItemActor> ItemClass;
+	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Item")
 	TObjectPtr<UTDItemAsset> ItemAsset;

@@ -7,4 +7,5 @@ void UTDItemObject::operator=(const ATDItemActor* ItemActor)
 {
 	ItemAsset = ItemActor->GetItemAsset();
 	ItemParams = ItemActor->GetItemParams();
+	ItemClass = ItemActor->GetClass();
 }

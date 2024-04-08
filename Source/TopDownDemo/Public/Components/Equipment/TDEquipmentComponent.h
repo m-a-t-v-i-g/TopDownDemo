@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "TDEquipmentComponent.generated.h"
 
+class UTDWeaponComponent;
 class UTDWeaponObject;
 
 UENUM(BlueprintType)
@@ -51,6 +52,8 @@ protected:
 	
 	TWeakObjectPtr<UTDEquipmentSlot> PrimarySlot;
 	TWeakObjectPtr<UTDEquipmentSlot> SecondarySlot;
+
+	TWeakObjectPtr<UTDWeaponComponent> WeaponComponent;
 	
 	UTDEquipmentSlot* CreateSlot(FTDEquipmentSlotParams SlotParams);
 	
@@ -69,8 +72,8 @@ public:
 
 private:
 	UFUNCTION()
-	void OnPrimarySlotChanged();
+	void OnPrimarySlotChanged(UTDWeaponObject* WeaponObject, bool bEquipped);
 
 	UFUNCTION()
-	void OnSecondarySlotChanged();
+	void OnSecondarySlotChanged(UTDWeaponObject* WeaponObject, bool bEquipped);
 };

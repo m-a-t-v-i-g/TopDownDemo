@@ -2,6 +2,8 @@
 
 #include "Equipment/TDEquipmentComponent.h"
 
+#include "TDCharacter.h"
+#include "TDWeaponComponent.h"
 #include "Assets/TDWeaponAsset.h"
 #include "Equipment/TDEquipmentSlot.h"
 #include "Objects/TDWeaponObject.h"
@@ -21,6 +23,15 @@ void UTDEquipmentComponent::InitEquipment()
 {
 	PrimarySlot = CreateSlot(Slots[0]);
 	SecondarySlot = CreateSlot(Slots[1]);
+
+	/* По стандарту, блок кода, написанный ниже, должен выноситься в отдельный класс экипировки для взаимодействия с
+	 * компонентом оружия и персонажем. */
+	auto Character = Cast<ATDCharacter>(GetOwner());
+	if (!Character)
+	{
+		return;
+	}
+	WeaponComponent = Character->GetComponentByClass<UTDWeaponComponent>();
 }
 
 void UTDEquipmentComponent::EquipItem(UTDWeaponObject* WeaponObject)
@@ -102,12 +113,12 @@ UTDEquipmentSlot* UTDEquipmentComponent::GetSlotByType(ETDEquipmentType Equipmen
 	return *Slot;
 }
 
-void UTDEquipmentComponent::OnPrimarySlotChanged()
+void UTDEquipmentComponent::OnPrimarySlotChanged(UTDWeaponObject* WeaponObject, bool bEquipped)
 {
-	
+	WeaponComponent->UpdateBeltWeapon(FName("Primary"), WeaponObject);
 }
 
-void UTDEquipmentComponent::OnSecondarySlotChanged()
+void UTDEquipmentComponent::OnSecondarySlotChanged(UTDWeaponObject* WeaponObject, bool bEquipped)
 {
-	
+	WeaponComponent->UpdateBeltWeapon(FName("Secondary"), WeaponObject);
 }
