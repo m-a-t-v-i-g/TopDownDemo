@@ -28,6 +28,8 @@ class TOPDOWNDEMO_API UTDWeaponComponent : public UActorComponent
 
 public:
 	UTDWeaponComponent();
+
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Weapon")
 	TObjectPtr<ATDWeaponActor> HandedWeapon;
@@ -43,6 +45,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void MoveHandedWeaponToBelt(FName& MovingSlot);
 
+	void StartShot();
+	void StopShot();
+
+	FHitResult ShotLocation;
+	
+	bool bIsShooting = false;
+	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TMap<FName, FTDWeaponSlot> BeltMap;

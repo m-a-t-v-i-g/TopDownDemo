@@ -16,7 +16,7 @@ class TOPDOWNDEMO_API UTDHealthComponent : public UActorComponent
 
 public:
 	UTDHealthComponent();
-	
+
 	void InitHealthComponent(bool bDead);
 	
 	UFUNCTION(BlueprintCallable, Category = "Health")

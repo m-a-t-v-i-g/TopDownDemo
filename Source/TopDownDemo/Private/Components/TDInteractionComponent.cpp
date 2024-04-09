@@ -17,4 +17,8 @@ void UTDInteractionComponent::ProcessInteraction(const FHitResult& HitResult)
 	{
 		OnInteractionDelegate.Broadcast(HitActor);
 	}
+	else
+	{
+		OnActionDelegate.Broadcast();
+	}
 }

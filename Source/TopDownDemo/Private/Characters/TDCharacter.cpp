@@ -7,6 +7,7 @@
 #include "TDWeaponComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Equipment/TDEquipmentComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Navigation/PathFollowingComponent.h"
 
 FName ATDCharacter::InventoryComponentName = FName("CharacterInventoryComp");
@@ -22,6 +23,17 @@ ATDCharacter::ATDCharacter()
 	HealthComponentClass = UTDHealthComponent::StaticClass();
 	
 	PrimaryActorTick.bCanEverTick = true;
+}
+
+void ATDCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (WeaponComponent && WeaponComponent->bIsShooting)
+	{
+		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetHitResultUnderCursor().Location);
+		SetActorRotation(FRotator(0.0f, TargetRotation.Yaw, 0.0f));
+	}
 }
 
 void ATDCharacter::PreInitializeComponents()
@@ -66,6 +78,14 @@ void ATDCharacter::FindOrCreateComponents()
 	}
 }
 
+FHitResult ATDCharacter::GetHitResultUnderCursor()
+{
+	FHitResult HitResult;
+	Cast<APlayerController>(GetController())->GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+
+	return HitResult;
+}
+
 void ATDCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -104,6 +124,22 @@ void ATDCharacter::TryInteract(AActor* WithActor)
 	}
 }
 
+void ATDCharacter::ChooseAction()
+{
+	if (IsArmed())
+	{
+		WeaponComponent->StartShot();
+	}
+}
+
+void ATDCharacter::ForceStopShooting()
+{
+	if (WeaponComponent->bIsShooting)
+	{
+		WeaponComponent->StopShot();
+	}
+}
+
 void ATDCharacter::ProcessInteraction()
 {
 	ITDInteractionInterface* InteractingActor = Cast<ITDInteractionInterface>(TargetToInteract);
@@ -130,4 +166,9 @@ float ATDCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 void ATDCharacter::OnCharacterDead()
 {
 	bIsDead = true;
+}
+
+bool ATDCharacter::IsArmed()
+{
+	return WeaponComponent->HasHandedWeapon();
 }

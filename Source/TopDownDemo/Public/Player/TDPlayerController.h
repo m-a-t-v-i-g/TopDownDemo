@@ -69,6 +69,7 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 	
 	void OnInteraction(AActor* TargetActor);
+	void OnAction();
 
 protected:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Pawn")

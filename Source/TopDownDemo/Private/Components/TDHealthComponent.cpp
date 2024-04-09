@@ -19,6 +19,8 @@ void UTDHealthComponent::InitHealthComponent(bool bDead)
 	{
 		MaxHealth = Health;
 	}
+
+	OnHealthChangedDelegate.AddUObject(this, &UTDHealthComponent::SetHealth);
 }
 
 void UTDHealthComponent::TakeDamage(float DamageValue) const

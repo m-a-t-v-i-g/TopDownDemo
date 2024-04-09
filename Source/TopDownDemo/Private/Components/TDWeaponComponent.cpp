@@ -12,6 +12,19 @@ UTDWeaponComponent::UTDWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UTDWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (!bIsShooting) return;
+	
+	ATDCharacter* Character = Cast<ATDCharacter>(GetOwner());
+	if (!Character) return;
+	
+	ShotLocation = Character->GetHitResultUnderCursor();
+	HandedWeapon->ShotLocation = ShotLocation;
+}
+
 void UTDWeaponComponent::UpdateHandedWeapon(int SlotIndex)
 {
 	ATDCharacter* Character = Cast<ATDCharacter>(GetOwner());
@@ -103,6 +116,22 @@ void UTDWeaponComponent::MoveHandedWeaponToBelt(FName& MovingSlot)
 	HandedWeapon->AttachToComponent(Character->GetMesh(), AttachmentTransformRules, WeaponSlot->SocketName);
 	HandedWeapon->SetActorTransform(AttachmentTransform);
 	HandedWeapon = nullptr;
+}
+
+void UTDWeaponComponent::StartShot()
+{
+	if (!HasHandedWeapon()) return;
+	
+	HandedWeapon->StartShot();
+	bIsShooting = true;
+}
+
+void UTDWeaponComponent::StopShot()
+{
+	if (!HasHandedWeapon()) return;
+	
+	HandedWeapon->StopShot();
+	bIsShooting = false;
 }
 
 void UTDWeaponComponent::UpdateBeltWeapon(FName SlotName, UTDWeaponObject* WeaponObject)

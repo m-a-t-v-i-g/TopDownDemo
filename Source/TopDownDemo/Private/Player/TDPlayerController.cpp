@@ -65,6 +65,7 @@ void ATDPlayerController::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	InteractionComponent->OnInteractionDelegate.AddUObject(this, &ATDPlayerController::OnInteraction);
+	InteractionComponent->OnActionDelegate.AddUObject(this, &ATDPlayerController::OnAction);
 }
 
 void ATDPlayerController::BindActions(UInputMappingContext* Context)
@@ -79,27 +80,38 @@ void ATDPlayerController::BindActions(UInputMappingContext* Context)
 		for (const FEnhancedActionKeyMapping& Keymapping : Mappings)
 		{
 			auto Action = Keymapping.Action;
-			EnhancedInputComponent->BindAction(Action, ETriggerEvent::Triggered, this, Action->GetFName());
+			EnhancedInputComponent->BindAction(Action, ETriggerEvent::Started, this, Action->GetFName());
+			EnhancedInputComponent->BindAction(Action, ETriggerEvent::Completed, this, Action->GetFName());
 		}
 	}
 }
 
 void ATDPlayerController::IA_LeftClick(const FInputActionValue& Value)
 {
-	FHitResult HitResult;
-	GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+	if (Value.Get<bool>())
+	{
+		FHitResult HitResult;
+		GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
 
-	if (!IsValid(InteractionComponent)) return;
+		if (!IsValid(InteractionComponent)) return;
 
-	InteractionComponent->ProcessInteraction(HitResult);
+		InteractionComponent->ProcessInteraction(HitResult);
+	}
+	else
+	{
+		GetTDCharacter()->ForceStopShooting();
+	}
 }
 
 void ATDPlayerController::IA_RightClick(const FInputActionValue& Value)
 {
-	FHitResult HitResult;
-	GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
+	if (Value.Get<bool>())
+	{
+		FHitResult HitResult;
+		GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
 
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitResult.Location);
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitResult.Location);
+	}
 }
 
 void ATDPlayerController::OnPossess(APawn* InPawn)
@@ -110,6 +122,11 @@ void ATDPlayerController::OnPossess(APawn* InPawn)
 void ATDPlayerController::OnInteraction(AActor* TargetActor)
 {
 	GetTDCharacter()->TryInteract(TargetActor);
+}
+
+void ATDPlayerController::OnAction()
+{
+	GetTDCharacter()->ChooseAction();
 }
 
 ATDCharacter* ATDPlayerController::GetTDCharacter()

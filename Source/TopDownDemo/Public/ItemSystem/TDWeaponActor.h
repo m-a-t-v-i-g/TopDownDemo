@@ -22,10 +22,29 @@ public:
 	virtual UTDItemObject* CreateItemObject(UClass* WeaponObjectClass) override;
 	
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	TObjectPtr<class UArrowComponent> Muzzle;
+	
 	UPROPERTY(EditInstanceOnly, Category = "Weapon")
 	FTDWeaponParams WeaponParams;
 
 public:
+	void StartShot();
+	void StopShot();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
+	void MakeShot();
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
 	FORCEINLINE FTDWeaponParams GetWeaponParams() const { return WeaponParams; }
+
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
+	FHitResult ShotLocation;
+	
+private:
+	FTimerHandle ShotTimerHandle;
+
+public:
+	UFUNCTION()
+	class UTDWeaponAsset* GetWeaponAsset() const;
 };

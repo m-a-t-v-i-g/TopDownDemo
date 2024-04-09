@@ -2,11 +2,16 @@
 
 #include "TDWeaponActor.h"
 #include "TDInventoryComponent.h"
+#include "Assets/TDWeaponAsset.h"
+#include "Components/ArrowComponent.h"
 #include "Equipment/TDEquipmentComponent.h"
 #include "Objects/TDWeaponObject.h"
 
 ATDWeaponActor::ATDWeaponActor()
 {
+	Muzzle = CreateDefaultSubobject<UArrowComponent>("Muzzle");
+	Muzzle->SetupAttachment(GetRootComponent());
+	
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -57,4 +62,35 @@ UTDItemObject* ATDWeaponActor::CreateItemObject(UClass* WeaponObjectClass)
 		*CreatedWeaponObject = this;
 	}
 	return CreatedWeaponObject;
+}
+
+void ATDWeaponActor::StartShot()
+{
+	if (GetWeaponAsset()->bAutomatic)
+	{
+		float ShotDelay = 1.0f / (GetWeaponAsset()->FireRate / 60.0f);
+		GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ATDWeaponActor::MakeShot, ShotDelay, true);
+	}
+	else
+	{
+		MakeShot();
+	}
+}
+
+void ATDWeaponActor::StopShot()
+{
+	if (GetWeaponAsset()->bAutomatic)
+	{
+		GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+	}
+}
+
+void ATDWeaponActor::MakeShot_Implementation()
+{
+	
+}
+
+UTDWeaponAsset* ATDWeaponActor::GetWeaponAsset() const
+{
+	return Cast<UTDWeaponAsset>(ItemAsset);
 }

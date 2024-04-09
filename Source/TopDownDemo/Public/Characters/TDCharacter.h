@@ -22,6 +22,8 @@ class TOPDOWNDEMO_API ATDCharacter : public ACharacter, public ITDSavableInterfa
 
 public:
 	ATDCharacter();
+
+	virtual void Tick(float DeltaSeconds) override;
 	
 #pragma region Components
 	
@@ -79,8 +81,11 @@ protected:
 private:
 	TWeakObjectPtr<class UPathFollowingComponent> FollowingComponent;
 	TWeakObjectPtr<AActor> TargetToInteract;
-	
+
 	FDelegateHandle StopMovingDelegate;
+
+public:
+	FHitResult GetHitResultUnderCursor();
 
 #pragma endregion Cache
 
@@ -89,6 +94,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
 	void TryInteract(AActor* WithActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
+	void ChooseAction();
+
+	UFUNCTION(BlueprintCallable, Category = "Character|Weapon")
+	void ForceStopShooting();
 
 private:
 	void ProcessInteraction();
@@ -102,4 +113,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = "Health")
 	bool bIsDead = false;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Weapon")
+	bool IsArmed();
 };

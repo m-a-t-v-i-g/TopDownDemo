@@ -7,6 +7,7 @@
 #include "TDInteractionComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnInteractionDelegate, AActor*);
+DECLARE_MULTICAST_DELEGATE(FOnActionDelegate);
 
 UCLASS(Blueprintable, BlueprintType)
 class TOPDOWNDEMO_API UTDInteractionComponent : public UActorComponent
@@ -19,4 +20,5 @@ public:
 	void ProcessInteraction(const FHitResult& HitResult);
 
 	FOnInteractionDelegate OnInteractionDelegate;
+	FOnActionDelegate OnActionDelegate;
 };
