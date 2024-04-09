@@ -73,6 +73,10 @@ protected:
 
 	/** Аналог PreInitializeComponents для возможности создания компонентов из блупринтов. */
 	virtual void FindOrCreateComponents();
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Inventory")
+	UTDInventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
 	
 #pragma endregion Components
 

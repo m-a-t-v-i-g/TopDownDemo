@@ -9,6 +9,8 @@
 class UTDItemAsset;
 class UTDItemObject;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnInventoryChangedDelegate, UTDItemObject*);
+
 UCLASS(Blueprintable, BlueprintType, ClassGroup = "TopDownDemo")
 class TOPDOWNDEMO_API UTDInventoryComponent : public UActorComponent
 {
@@ -22,4 +24,7 @@ public:
 private:
 	UPROPERTY(EditInstanceOnly, Category = "Inventory")
 	TArray<UTDItemObject*> InventoryItems;
+
+public:
+	FOnInventoryChangedDelegate OnInventoryChangedDelegate;
 };

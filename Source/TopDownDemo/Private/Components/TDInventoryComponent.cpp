@@ -12,4 +12,5 @@ void UTDInventoryComponent::AddItem(UTDItemObject* ItemObject)
 	check(!InventoryItems.Contains(ItemObject));
 
 	InventoryItems.Add(ItemObject);
+	OnInventoryChangedDelegate.Broadcast(ItemObject);
 }

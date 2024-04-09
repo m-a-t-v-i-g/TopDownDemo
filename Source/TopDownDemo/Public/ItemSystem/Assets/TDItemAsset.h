@@ -23,5 +23,8 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
+	FORCEINLINE FText GetItemName() const { return Name; }
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
 	FORCEINLINE UStaticMesh* GetStaticMesh() const { return StaticMesh.Get(); }
 };

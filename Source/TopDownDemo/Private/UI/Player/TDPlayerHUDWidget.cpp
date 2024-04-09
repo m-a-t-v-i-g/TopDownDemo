@@ -16,6 +16,8 @@ void UTDPlayerHUDWidget::NativeOnInitialized()
 void UTDPlayerHUDWidget::InitHUDWidget(ATDCharacter* NewCharacter)
 {
 	Character = NewCharacter;
+	
+	InventoryWidget->InitInventoryWidget(Character->GetInventoryComponent());
 }
 
 float UTDPlayerHUDWidget::GetHealthPercent()
