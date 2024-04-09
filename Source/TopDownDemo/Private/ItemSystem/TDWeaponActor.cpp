@@ -5,6 +5,7 @@
 #include "Assets/TDWeaponAsset.h"
 #include "Components/ArrowComponent.h"
 #include "Equipment/TDEquipmentComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Objects/TDWeaponObject.h"
 
 ATDWeaponActor::ATDWeaponActor()
@@ -66,14 +67,23 @@ UTDItemObject* ATDWeaponActor::CreateItemObject(UClass* WeaponObjectClass)
 
 void ATDWeaponActor::StartShot()
 {
-	if (GetWeaponAsset()->bAutomatic)
+	if (IsAmmoEmpty())
 	{
-		float ShotDelay = 1.0f / (GetWeaponAsset()->FireRate / 60.0f);
-		GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ATDWeaponActor::MakeShot, ShotDelay, true);
+		StartReload();
+		return;
 	}
-	else
+
+	if (CanShot())
 	{
-		MakeShot();
+		if (GetWeaponAsset()->bAutomatic)
+		{
+			float ShotDelay = 1.0f / (GetWeaponAsset()->FireRate / 60.0f);
+			GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ATDWeaponActor::MakeShot, ShotDelay, true);
+		}
+		else
+		{
+			MakeShot();
+		}
 	}
 }
 
@@ -85,12 +95,46 @@ void ATDWeaponActor::StopShot()
 	}
 }
 
+void ATDWeaponActor::StartReload()
+{
+	bIsReloading = true;
+	GetWorldTimerManager().SetTimer(ReloadTimerHandle, this, &ATDWeaponActor::MakeReload, GetWeaponAsset()->ReloadTime, false);
+	UKismetSystemLibrary::PrintString(GetWorld(), "Reloading...", true, false);
+}
+
 void ATDWeaponActor::MakeShot_Implementation()
 {
-	
+	if (!IsAmmoEmpty())
+	{
+		WeaponParams.Rounds--;
+	}
+	else
+	{
+		StopShot();
+		StartReload();
+	}
+}
+
+void ATDWeaponActor::MakeReload_Implementation()
+{
+	bIsReloading = false;
+	WeaponParams.Rounds = GetWeaponAsset()->MaxRounds;
+	GetWorldTimerManager().ClearTimer(ReloadTimerHandle);
+
+	UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("%s was reload!"), *GetName()), true, false);
 }
 
 UTDWeaponAsset* ATDWeaponActor::GetWeaponAsset() const
 {
 	return Cast<UTDWeaponAsset>(ItemAsset);
+}
+
+bool ATDWeaponActor::CanShot()
+{
+	return !bIsReloading && WeaponParams.Rounds > 0;
+}
+
+bool ATDWeaponActor::IsAmmoEmpty()
+{
+	return WeaponParams.Rounds <= 0;
 }

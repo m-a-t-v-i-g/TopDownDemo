@@ -32,10 +32,15 @@ public:
 	void StartShot();
 	void StopShot();
 
+	void StartReload();
+
 	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
 	void MakeShot();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
+	void MakeReload();
 	
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Item")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	FORCEINLINE FTDWeaponParams GetWeaponParams() const { return WeaponParams; }
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
@@ -43,8 +48,15 @@ public:
 	
 private:
 	FTimerHandle ShotTimerHandle;
+	FTimerHandle ReloadTimerHandle;
 
 public:
 	UFUNCTION()
 	class UTDWeaponAsset* GetWeaponAsset() const;
+
+	bool CanShot();
+
+	bool IsAmmoEmpty();
+
+	bool bIsReloading = false;
 };
