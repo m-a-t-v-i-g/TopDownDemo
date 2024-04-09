@@ -116,4 +116,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Weapon")
 	bool IsArmed();
+
+	UFUNCTION()
+	float GetHealthPercent();
 };

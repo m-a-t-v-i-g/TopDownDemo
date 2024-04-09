@@ -33,6 +33,9 @@ public:
 	bool IsHealthMinimum() const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Health")
+	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Health")
 	FORCEINLINE float GetHealth() const { return Health; }
 
 protected:

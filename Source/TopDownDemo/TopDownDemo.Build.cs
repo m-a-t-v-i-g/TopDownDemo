@@ -10,7 +10,7 @@ public class TopDownDemo : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new[]
 			{
-				"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule"
+				"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "UMG"
 			}
 		);
 
@@ -27,7 +27,8 @@ public class TopDownDemo : ModuleRules
 			"TopDownDemo/Public/Components",
 			"TopDownDemo/Public/Interfaces",
 			"TopDownDemo/Public/ItemSystem",
-			"TopDownDemo/Public/Player"
+			"TopDownDemo/Public/Player",
+			"TopDownDemo/Public/UI"
 		});
 		
 		PrivateIncludePaths.AddRange(new[]
@@ -37,7 +38,8 @@ public class TopDownDemo : ModuleRules
 			"TopDownDemo/Private/Components",
 			"TopDownDemo/Private/Interfaces",
 			"TopDownDemo/Private/ItemSystem",
-			"TopDownDemo/Private/Player"
+			"TopDownDemo/Private/Player",
+			"TopDownDemo/Private/UI"
 		});
 	}
 }

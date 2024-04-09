@@ -64,6 +64,10 @@ protected:
 	UFUNCTION()
 	void IA_RightClick(const FInputActionValue& Value);
 
+	/* Включение/отключение инвентаря. */
+	UFUNCTION()
+	void IA_ToggleInventory(const FInputActionValue& Value);
+
 #pragma endregion Input
 
 	virtual void OnPossess(APawn* InPawn) override;

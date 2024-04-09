@@ -172,3 +172,11 @@ bool ATDCharacter::IsArmed()
 {
 	return WeaponComponent->HasHandedWeapon();
 }
+
+float ATDCharacter::GetHealthPercent()
+{
+	float HealthValue = HealthComponent->GetHealth();
+	float MaxHealthValue = HealthComponent->GetMaxHealth();
+
+	return HealthValue / MaxHealthValue;
+}

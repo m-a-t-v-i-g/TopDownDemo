@@ -8,6 +8,7 @@
 #include "TDCharacter.h"
 #include "TDInteractionComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Player/TDPlayerHUD.h"
 
 FName ATDPlayerController::InteractionComponentName = FName("PlayerInteractionComponent");
 
@@ -111,6 +112,17 @@ void ATDPlayerController::IA_RightClick(const FInputActionValue& Value)
 		GetHitResultUnderCursor(ECC_Visibility, true, HitResult);
 
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitResult.Location);
+	}
+}
+
+void ATDPlayerController::IA_ToggleInventory(const FInputActionValue& Value)
+{
+	auto TopDownHUD = Cast<ATDPlayerHUD>(MyHUD);
+	check(TopDownHUD);
+	
+	if (Value.Get<bool>())
+	{
+		TopDownHUD->ToggleInventory();
 	}
 }
 
