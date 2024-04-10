@@ -165,6 +165,7 @@ ATDWeaponActor* UTDWeaponComponent::SpawnWeaponOnBelt(FName SlotName, UTDWeaponO
 		{
 			FAttachmentTransformRules AttachmentTransformRules{EAttachmentRule::SnapToTarget, false};
 			Weapon->InitItem(FromObject);
+			Weapon->SetOwner(GetOwner());
 			Weapon->SetHandedMode();
 			Weapon->AttachToComponent(Character->GetMesh(), AttachmentTransformRules, WeaponSlot->SocketName);
 		}

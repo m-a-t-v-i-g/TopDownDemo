@@ -7,6 +7,8 @@
 #include "Equipment/TDEquipmentComponent.h"
 #include "TDWeaponAsset.generated.h"
 
+class UTDAmmoAsset;
+
 UCLASS()
 class TOPDOWNDEMO_API UTDWeaponAsset : public UTDItemAsset
 {
@@ -16,10 +18,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	ETDEquipmentType EquipmentType = ETDEquipmentType::None;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (ClampMin = "0", ForceUnits = "pc"))
 	int MaxRounds = 0;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (ClampMin = "0", ForceUnits = "s"))
 	float ReloadTime = 0.0f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (ClampMin = "0", ForceUnits = "rpm"))
@@ -27,4 +29,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	bool bAutomatic = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TObjectPtr<UTDAmmoAsset> AmmoType;
 };

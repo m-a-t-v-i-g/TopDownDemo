@@ -134,7 +134,7 @@ void ATDCharacter::ChooseAction()
 
 void ATDCharacter::ForceStopShooting()
 {
-	if (WeaponComponent->bIsShooting)
+	if (WeaponComponent && WeaponComponent->bIsShooting)
 	{
 		WeaponComponent->StopShot();
 	}
@@ -170,7 +170,7 @@ void ATDCharacter::OnCharacterDead()
 
 bool ATDCharacter::IsArmed()
 {
-	return WeaponComponent->HasHandedWeapon();
+	return WeaponComponent && WeaponComponent->HasHandedWeapon();
 }
 
 float ATDCharacter::GetHealthPercent()
