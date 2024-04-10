@@ -118,9 +118,15 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Health")
 	bool bIsDead = false;
 
+	UFUNCTION(BlueprintCallable, Category = "Character|Weapon")
+	void ReloadWeapon();
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Weapon")
 	bool IsArmed();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Character|Health")
+	void UseMedkit();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Health")
 	float GetHealthPercent();
 };

@@ -68,6 +68,12 @@ protected:
 	UFUNCTION()
 	void IA_ToggleInventory(const FInputActionValue& Value);
 
+	UFUNCTION()
+	void IA_Reload(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void IA_Heal(const FInputActionValue& Value);
+
 #pragma endregion Input
 
 	virtual void OnPossess(APawn* InPawn) override;

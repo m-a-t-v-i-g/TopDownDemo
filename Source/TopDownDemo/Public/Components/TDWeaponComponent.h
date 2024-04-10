@@ -7,6 +7,7 @@
 #include "Equipment/TDEquipmentComponent.h"
 #include "TDWeaponComponent.generated.h"
 
+class ATDCharacter;
 class ATDWeaponActor;
 
 USTRUCT(BlueprintType)
@@ -30,6 +31,8 @@ public:
 	UTDWeaponComponent();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void InitWeaponComponent(ATDCharacter* Character);
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Weapon")
 	TObjectPtr<ATDWeaponActor> HandedWeapon;
@@ -47,6 +50,8 @@ public:
 
 	void StartShot();
 	void StopShot();
+
+	void StartReload();
 
 	FHitResult ShotLocation;
 	
@@ -67,4 +72,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	bool HasBeltWeapon(FName SlotName);
+
+private:
+	TWeakObjectPtr<class UTDInventoryComponent> Inventory;
 };

@@ -34,17 +34,18 @@ public:
 
 	void StartReload();
 
-	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
-	void MakeShot();
-
-	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
-	void MakeReload();
-	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	FORCEINLINE FTDWeaponParams GetWeaponParams() const { return WeaponParams; }
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
 	FHitResult ShotLocation;
+
+protected:
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
+	void MakeShot();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
+	void MakeReload();
 	
 private:
 	FTimerHandle ShotTimerHandle;
@@ -54,9 +55,14 @@ public:
 	UFUNCTION()
 	class UTDWeaponAsset* GetWeaponAsset() const;
 
+	UFUNCTION()
 	bool CanShot();
 
+	UFUNCTION()
 	bool IsAmmoEmpty();
+
+	UFUNCTION()
+	bool IsAmmoFull();
 
 	bool bIsReloading = false;
 };

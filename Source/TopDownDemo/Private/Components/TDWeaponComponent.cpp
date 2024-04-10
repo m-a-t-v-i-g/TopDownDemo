@@ -2,9 +2,12 @@
 
 #include "TDWeaponComponent.h"
 #include "TDCharacter.h"
+#include "TDInventoryComponent.h"
 #include "TDWeaponActor.h"
+#include "Assets/TDAmmoAsset.h"
 #include "Assets/TDWeaponAsset.h"
 #include "GameFramework/Character.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Objects/TDWeaponObject.h"
 
 UTDWeaponComponent::UTDWeaponComponent()
@@ -23,6 +26,11 @@ void UTDWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	
 	ShotLocation = Character->GetHitResultUnderCursor();
 	HandedWeapon->ShotLocation = ShotLocation;
+}
+
+void UTDWeaponComponent::InitWeaponComponent(ATDCharacter* Character)
+{
+	Inventory = Character->GetInventoryComponent();
 }
 
 void UTDWeaponComponent::UpdateHandedWeapon(int SlotIndex)
@@ -121,9 +129,16 @@ void UTDWeaponComponent::MoveHandedWeaponToBelt(FName& MovingSlot)
 void UTDWeaponComponent::StartShot()
 {
 	if (!HasHandedWeapon()) return;
-	
-	HandedWeapon->StartShot();
-	bIsShooting = true;
+
+	if (HandedWeapon->IsAmmoEmpty())
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Weapon needs to reload!")), true, false);
+	}
+	else if (HandedWeapon->CanShot())
+	{
+		HandedWeapon->StartShot();
+		bIsShooting = true;
+	}
 }
 
 void UTDWeaponComponent::StopShot()
@@ -132,6 +147,26 @@ void UTDWeaponComponent::StopShot()
 	
 	HandedWeapon->StopShot();
 	bIsShooting = false;
+}
+
+void UTDWeaponComponent::StartReload()
+{
+	if (!HasHandedWeapon()) return;
+
+	if (HandedWeapon->bIsReloading) return;
+	
+	auto WeaponAsset = HandedWeapon->GetWeaponAsset();
+	
+	if (!Inventory->FindItemByAsset(WeaponAsset->AmmoType))
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("No available ammo in the inventory!")), true, false);
+		return;
+	}
+	
+	if (!HandedWeapon->IsAmmoFull())
+	{
+		HandedWeapon->StartReload();
+	}
 }
 
 void UTDWeaponComponent::UpdateBeltWeapon(FName SlotName, UTDWeaponObject* WeaponObject)

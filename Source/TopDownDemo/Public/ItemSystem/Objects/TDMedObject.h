@@ -15,4 +15,7 @@ class TOPDOWNDEMO_API UTDMedObject : public UTDItemObject
 	
 public:
 	void operator=(const ATDMedActor* MedActor);
+
+	UFUNCTION()
+	float GetHealValue();
 };

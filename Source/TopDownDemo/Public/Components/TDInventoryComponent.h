@@ -3,13 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Assets/TDWeaponAsset.h"
 #include "Components/ActorComponent.h"
 #include "TDInventoryComponent.generated.h"
 
+class UTDMedObject;
 class UTDItemAsset;
 class UTDItemObject;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnInventoryChangedDelegate, UTDItemObject*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAdded, UTDItemObject*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemoved, UTDItemObject*);
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = "TopDownDemo")
 class TOPDOWNDEMO_API UTDInventoryComponent : public UActorComponent
@@ -21,10 +24,17 @@ public:
 
 	void AddItem(UTDItemObject* ItemObject);
 
+	void RemoveItem(UTDItemObject* ItemObject);
+
+	UTDItemObject* FindItemByAsset(UTDItemAsset* AssetType);
+
+	UTDItemObject* FindMedkit();
+	
 private:
 	UPROPERTY(EditInstanceOnly, Category = "Inventory")
 	TArray<UTDItemObject*> InventoryItems;
 
 public:
-	FOnInventoryChangedDelegate OnInventoryChangedDelegate;
+	FOnItemAdded OnItemAdded;
+	FOnItemRemoved OnItemRemoved;
 };

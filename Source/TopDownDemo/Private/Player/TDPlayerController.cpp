@@ -126,6 +126,22 @@ void ATDPlayerController::IA_ToggleInventory(const FInputActionValue& Value)
 	}
 }
 
+void ATDPlayerController::IA_Reload(const FInputActionValue& Value)
+{
+	if (Value.Get<bool>())
+	{
+		GetTDCharacter()->ReloadWeapon();
+	}
+}
+
+void ATDPlayerController::IA_Heal(const FInputActionValue& Value)
+{
+	if (Value.Get<bool>())
+	{
+		GetTDCharacter()->UseMedkit();
+	}
+}
+
 void ATDPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);

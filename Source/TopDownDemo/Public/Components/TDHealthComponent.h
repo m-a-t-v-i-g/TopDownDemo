@@ -23,6 +23,9 @@ public:
 	void TakeDamage(float DamageValue) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
+	void RestoreHealth(float Value);
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetHealth(float HealthValue);
 
 private:
@@ -31,6 +34,9 @@ private:
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Health")
 	bool IsHealthMinimum() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Health")
+	bool IsHealthMaximum() const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Health")
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }

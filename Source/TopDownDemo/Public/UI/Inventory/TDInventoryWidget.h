@@ -7,6 +7,7 @@
 #include "TDInventoryWidget.generated.h"
 
 class UVerticalBox;
+class UTDItemObject;
 
 UCLASS()
 class TOPDOWNDEMO_API UTDInventoryWidget : public UUserWidget
@@ -22,8 +23,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	TSubclassOf<class UTDItemWidget> ItemWidgetClass;
-	
+
 private:
+	TMap<UTDItemObject*, UTDItemWidget*> ItemsMap;
+	
 	UFUNCTION()
 	void OnItemAdded(class UTDItemObject* ItemObject);
+	
+	UFUNCTION()
+	void OnItemRemoved(UTDItemObject* ItemObject);
 };

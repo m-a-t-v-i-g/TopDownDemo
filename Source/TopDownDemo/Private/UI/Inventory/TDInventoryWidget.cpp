@@ -8,7 +8,8 @@
 
 void UTDInventoryWidget::InitInventoryWidget(UTDInventoryComponent* Inventory)
 {
-	Inventory->OnInventoryChangedDelegate.AddUObject(this, &UTDInventoryWidget::OnItemAdded);
+	Inventory->OnItemAdded.AddUObject(this, &UTDInventoryWidget::OnItemAdded);
+	Inventory->OnItemRemoved.AddUObject(this, &UTDInventoryWidget::OnItemRemoved);
 }
 
 void UTDInventoryWidget::OnItemAdded(UTDItemObject* ItemObject)
@@ -19,4 +20,13 @@ void UTDInventoryWidget::OnItemAdded(UTDItemObject* ItemObject)
 	ItemWidget->ItemObject = ItemObject;
 
 	InventoryBox->AddChildToVerticalBox(ItemWidget);
+	ItemsMap.Add(ItemObject, ItemWidget);
+}
+
+void UTDInventoryWidget::OnItemRemoved(UTDItemObject* ItemObject)
+{
+	auto ItemWidget = *ItemsMap.Find(ItemObject);
+	ItemWidget->RemoveFromParent();
+
+	ItemsMap.Remove(ItemObject);
 }

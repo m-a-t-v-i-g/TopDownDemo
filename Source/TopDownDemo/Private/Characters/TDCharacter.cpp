@@ -8,7 +8,9 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Equipment/TDEquipmentComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "Objects/TDMedObject.h"
 
 FName ATDCharacter::InventoryComponentName = FName("CharacterInventoryComp");
 FName ATDCharacter::EquipmentComponentName = FName("CharacterEquipmentComp");
@@ -93,6 +95,9 @@ void ATDCharacter::PossessedBy(AController* NewController)
 	check(EquipmentComponent);
 	EquipmentComponent->InitEquipment();
 
+	check(WeaponComponent);
+	WeaponComponent->InitWeaponComponent(this);
+
 	check(HealthComponent);
 	HealthComponent->OnOwnerDiedDelegate.AddUObject(this, &ATDCharacter::OnCharacterDead);
 	HealthComponent->InitHealthComponent(bIsDead);
@@ -168,9 +173,36 @@ void ATDCharacter::OnCharacterDead()
 	bIsDead = true;
 }
 
+void ATDCharacter::ReloadWeapon()
+{
+	if (IsArmed())
+	{
+		WeaponComponent->StartReload();
+	}
+}
+
 bool ATDCharacter::IsArmed()
 {
 	return WeaponComponent && WeaponComponent->HasHandedWeapon();
+}
+
+void ATDCharacter::UseMedkit()
+{
+	auto Medkit = InventoryComponent->FindMedkit();
+	if (!Medkit)
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Medkit is not found in your inventory!")), true, false);
+		return;
+	}
+	
+	if (HealthComponent->IsHealthMaximum())
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Health is full!")), true, false);
+		return;
+	}
+	
+	HealthComponent->RestoreHealth(Cast<UTDMedObject>(Medkit)->GetHealValue());
+	InventoryComponent->RemoveItem(Medkit);
 }
 
 float ATDCharacter::GetHealthPercent()
