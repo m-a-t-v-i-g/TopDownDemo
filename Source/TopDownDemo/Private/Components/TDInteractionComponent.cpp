@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #include "TDInteractionComponent.h"
 #include "TDInteractionInterface.h"
@@ -10,6 +11,9 @@ UTDInteractionComponent::UTDInteractionComponent()
 
 void UTDInteractionComponent::ProcessInteraction(const FHitResult& HitResult)
 {
+	/* Данный метод обрабатывает объект, по которому был произведен щелчок и выстраивает дальнейшие действия в зависимости
+	 * от требований. */
+	
 	AActor* HitActor = HitResult.GetActor();
 	if (!IsValid(HitActor)) return;
 

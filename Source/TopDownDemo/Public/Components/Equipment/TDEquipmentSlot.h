@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #pragma once
 
@@ -24,7 +25,6 @@ public:
 	void InitSlot(FTDEquipmentSlotParams SlotParams);
 
 	void EquipSlot(UTDWeaponObject* NewItemObject);
-	void UnequipSlot(UTDWeaponObject* OldItemObject);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Slot")
@@ -34,8 +34,11 @@ protected:
 	ETDEquipmentType SlotType;
 
 public:
-	FName GetSlotName() const { return SlotName; }
-	ETDEquipmentType GetSlotType() const { return SlotType; }
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Slot")
+	FORCEINLINE FName GetSlotName() const { return SlotName; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Slot")
+	FORCEINLINE ETDEquipmentType GetSlotType() const { return SlotType; }
 	
 private:
 	TObjectPtr<UTDEquipmentComponent> Equipment;
@@ -45,8 +48,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Slot")
 	bool bEquipped = false;
 
-	FOnSlotChangedDelegate OnSlotChangedDelegate;
-
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Slot")
-	UTDWeaponObject* GetWeaponObject() const { return ItemObject; }
+	FORCEINLINE UTDWeaponObject* GetWeaponObject() const { return ItemObject; }
+	
+	FOnSlotChangedDelegate OnSlotChangedDelegate;
 };

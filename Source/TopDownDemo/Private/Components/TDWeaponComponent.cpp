@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #include "TDWeaponComponent.h"
 #include "TDCharacter.h"
@@ -36,6 +37,7 @@ void UTDWeaponComponent::InitWeaponComponent(ATDCharacter* Character)
 void UTDWeaponComponent::UpdateHandedWeapon(int SlotIndex)
 {
 	ATDCharacter* Character = Cast<ATDCharacter>(GetOwner());
+	check(Character);
 
 	FName MovingSlot;
 	

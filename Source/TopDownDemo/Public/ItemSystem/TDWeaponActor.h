@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #pragma once
 
@@ -31,11 +32,7 @@ protected:
 public:
 	void StartShot();
 	void StopShot();
-
 	void StartReload();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
-	FORCEINLINE FTDWeaponParams GetWeaponParams() const { return WeaponParams; }
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
 	FHitResult ShotLocation;
@@ -47,22 +44,26 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
 	void MakeReload();
 	
+public:
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
+	bool bIsReloading = false;
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	class UTDWeaponAsset* GetWeaponAsset() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	FORCEINLINE FTDWeaponParams GetWeaponParams() const { return WeaponParams; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	bool CanShot();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	bool IsAmmoEmpty();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	bool IsAmmoFull();
+	
 private:
 	FTimerHandle ShotTimerHandle;
 	FTimerHandle ReloadTimerHandle;
-
-public:
-	UFUNCTION()
-	class UTDWeaponAsset* GetWeaponAsset() const;
-
-	UFUNCTION()
-	bool CanShot();
-
-	UFUNCTION()
-	bool IsAmmoEmpty();
-
-	UFUNCTION()
-	bool IsAmmoFull();
-
-	bool bIsReloading = false;
 };

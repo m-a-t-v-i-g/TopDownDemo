@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #pragma once
 
@@ -31,8 +32,10 @@ public:
 	UTDWeaponComponent();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
 	void InitWeaponComponent(ATDCharacter* Character);
+
+#pragma region Handed
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Weapon")
 	TObjectPtr<ATDWeaponActor> HandedWeapon;
@@ -50,18 +53,24 @@ public:
 
 	void StartShot();
 	void StopShot();
-
 	void StartReload();
 
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
 	FHitResult ShotLocation;
-	
+
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
 	bool bIsShooting = false;
-	
+
+#pragma endregion Handed
+
+#pragma region Belt
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TMap<FName, FTDWeaponSlot> BeltMap;
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void UpdateBeltWeapon(FName SlotName, UTDWeaponObject* WeaponObject);
 	
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
@@ -75,6 +84,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	int GetAmmoInWeapon();
+
+#pragma endregion Belt
 
 private:
 	TWeakObjectPtr<class UTDInventoryComponent> Inventory;

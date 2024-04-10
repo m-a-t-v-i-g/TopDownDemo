@@ -1,4 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #include "TDCharacter.h"
 #include "TDHealthComponent.h"
@@ -25,17 +26,6 @@ ATDCharacter::ATDCharacter()
 	HealthComponentClass = UTDHealthComponent::StaticClass();
 	
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-void ATDCharacter::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	if (WeaponComponent && WeaponComponent->bIsShooting)
-	{
-		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetHitResultUnderCursor().Location);
-		SetActorRotation(FRotator(0.0f, TargetRotation.Yaw, 0.0f));
-	}
 }
 
 void ATDCharacter::PreInitializeComponents()
@@ -88,21 +78,6 @@ FHitResult ATDCharacter::GetHitResultUnderCursor()
 	return HitResult;
 }
 
-void ATDCharacter::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-
-	check(EquipmentComponent);
-	EquipmentComponent->InitEquipment();
-
-	check(WeaponComponent);
-	WeaponComponent->InitWeaponComponent(this);
-
-	check(HealthComponent);
-	HealthComponent->OnOwnerDiedDelegate.AddUObject(this, &ATDCharacter::OnCharacterDead);
-	HealthComponent->InitHealthComponent(bIsDead);
-}
-
 void ATDCharacter::TryInteract(AActor* WithActor)
 {
 	check(WithActor);
@@ -125,6 +100,7 @@ void ATDCharacter::TryInteract(AActor* WithActor)
 	}
 	else
 	{
+		/* Если расстояние до объекта < 100 юнитов, вызываем интеракшн. */
 		ProcessInteraction();
 	}
 }
@@ -161,16 +137,38 @@ void ATDCharacter::InteractAfterMoving(FAIRequestID RequestID, const FPathFollow
 	ProcessInteraction();
 }
 
+void ATDCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	check(EquipmentComponent);
+	EquipmentComponent->InitEquipmentComponent();
+
+	check(WeaponComponent);
+	WeaponComponent->InitWeaponComponent(this);
+
+	check(HealthComponent);
+	HealthComponent->OnOwnerDiedDelegate.AddUObject(this, &ATDCharacter::OnCharacterDead);
+	HealthComponent->InitHealthComponent(bIsDead);
+}
+
+void ATDCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	/* При стрельбе поворачиваемся в сторону выстрела (точку, где произошел клик). */
+	if (WeaponComponent && WeaponComponent->bIsShooting)
+	{
+		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetHitResultUnderCursor().Location);
+		SetActorRotation(FRotator(0.0f, TargetRotation.Yaw, 0.0f));
+	}
+}
+
 float ATDCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
                                AActor* DamageCauser)
 {
 	HealthComponent->TakeDamage(DamageAmount);
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-}
-
-void ATDCharacter::OnCharacterDead()
-{
-	bIsDead = true;
 }
 
 void ATDCharacter::ReloadWeapon()
@@ -216,4 +214,9 @@ float ATDCharacter::GetHealthPercent()
 	float MaxHealthValue = HealthComponent->GetMaxHealth();
 
 	return HealthValue / MaxHealthValue;
+}
+
+void ATDCharacter::OnCharacterDead()
+{
+	bIsDead = true;
 }

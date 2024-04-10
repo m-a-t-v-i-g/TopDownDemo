@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #include "Equipment/TDEquipmentSlot.h"
 #include "Equipment/TDEquipmentComponent.h"
@@ -29,12 +30,5 @@ void UTDEquipmentSlot::EquipSlot(UTDWeaponObject* NewItemObject)
 {
 	ItemObject = NewItemObject;
 	bEquipped = true;
-	OnSlotChangedDelegate.Broadcast(ItemObject, bEquipped);
-}
-
-void UTDEquipmentSlot::UnequipSlot(UTDWeaponObject* OldItemObject)
-{
-	ItemObject = nullptr;
-	bEquipped = false;
 	OnSlotChangedDelegate.Broadcast(ItemObject, bEquipped);
 }

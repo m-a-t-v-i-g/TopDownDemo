@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #pragma once
 
@@ -39,34 +40,34 @@ public:
 
 	void AddEquipmentSlot(class UTDEquipmentSlot* Slot);
 
-	void InitEquipment();
+	void InitEquipmentComponent();
 
+	/** Экипировать предмет в любой из доступных слотов. */
 	void EquipItem(UTDWeaponObject* WeaponObject);
-	void UnequipItem(UTDWeaponObject* WeaponObject);
-
-	bool IsAnySlotAvailable(const UTDWeaponObject* WeaponObject);
 
 protected:
+	/** Параметры для создания слотов экипировки. */
 	UPROPERTY(EditDefaultsOnly, Category = "Equipment")
 	TArray<FTDEquipmentSlotParams> Slots;
-	
+
+	/** Действующие экипировочные слоты. */
+	UPROPERTY(EditInstanceOnly, Category = "Equipment")
+	TArray<UTDEquipmentSlot*> EquipmentSlots;
+
 	TWeakObjectPtr<UTDEquipmentSlot> PrimarySlot;
 	TWeakObjectPtr<UTDEquipmentSlot> SecondarySlot;
-
 	TWeakObjectPtr<UTDWeaponComponent> WeaponComponent;
 	
 	UTDEquipmentSlot* CreateSlot(FTDEquipmentSlotParams SlotParams);
 	
 	void BindSlot(UTDEquipmentSlot* SlotToBind);
 	
-private:
-	UPROPERTY(EditInstanceOnly, Category = "Equipment")
-	TMap<UTDEquipmentSlot*, UTDWeaponObject*> EquippedItems;
-	
-	UPROPERTY(EditInstanceOnly, Category = "Equipment")
-	TArray<UTDEquipmentSlot*> EquipmentSlots;
-
 public:
+	/** Проверить, есть ли доступный слот для добавления предмета в него. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Equipment")
+	bool IsAnySlotAvailableFor(const UTDWeaponObject* WeaponObject);
+
+	/** Получить слот по типу. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Equipment")
 	UTDEquipmentSlot* GetSlotByType(ETDEquipmentType EquipmentType);
 
@@ -76,4 +77,7 @@ private:
 
 	UFUNCTION()
 	void OnSecondarySlotChanged(UTDWeaponObject* WeaponObject, bool bEquipped);
+
+	UPROPERTY(EditInstanceOnly, Category = "Equipment")
+	TMap<UTDEquipmentSlot*, UTDWeaponObject*> EquippedItems;
 };

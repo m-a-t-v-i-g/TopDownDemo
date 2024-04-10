@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #include "TDWeaponActor.h"
 #include "TDInventoryComponent.h"
@@ -23,7 +24,7 @@ void ATDWeaponActor::OnInteraction(AActor* Interactor)
 
 	if (UTDEquipmentComponent* FindEquipment = Interactor->FindComponentByClass<UTDEquipmentComponent>())
 	{
-		if (FindEquipment->IsAnySlotAvailable(WeaponObject))
+		if (FindEquipment->IsAnySlotAvailableFor(WeaponObject))
 		{
 			FindEquipment->EquipItem(WeaponObject);
 			Destroy();

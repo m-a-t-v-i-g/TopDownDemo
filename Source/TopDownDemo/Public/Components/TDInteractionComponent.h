@@ -1,4 +1,5 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #pragma once
 
@@ -17,6 +18,7 @@ class TOPDOWNDEMO_API UTDInteractionComponent : public UActorComponent
 public:
 	UTDInteractionComponent();
 
+	/** Обработка клика пользователя. */
 	void ProcessInteraction(const FHitResult& HitResult);
 
 	FOnInteractionDelegate OnInteractionDelegate;

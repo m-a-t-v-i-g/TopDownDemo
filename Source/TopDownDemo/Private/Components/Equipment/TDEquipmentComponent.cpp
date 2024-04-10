@@ -1,7 +1,7 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #include "Equipment/TDEquipmentComponent.h"
-
 #include "TDCharacter.h"
 #include "TDWeaponComponent.h"
 #include "Assets/TDWeaponAsset.h"
@@ -19,7 +19,7 @@ void UTDEquipmentComponent::AddEquipmentSlot(UTDEquipmentSlot* Slot)
 	EquipmentSlots.Add(Slot);
 }
 
-void UTDEquipmentComponent::InitEquipment()
+void UTDEquipmentComponent::InitEquipmentComponent()
 {
 	PrimarySlot = CreateSlot(Slots[0]);
 	SecondarySlot = CreateSlot(Slots[1]);
@@ -52,24 +52,7 @@ void UTDEquipmentComponent::EquipItem(UTDWeaponObject* WeaponObject)
 	EquippedItems.Add(FreeSlot, WeaponObject);
 }
 
-void UTDEquipmentComponent::UnequipItem(UTDWeaponObject* WeaponObject)
-{
-	auto DataAsset = Cast<UTDWeaponAsset>(WeaponObject->GetItemAsset());
-	if (!DataAsset)
-	{
-		return;
-	}
-
-	auto Slot = *EquipmentSlots.FindByPredicate([WeaponObject](const UTDEquipmentSlot* FindSlot)
-	{
-		return FindSlot->GetWeaponObject() == WeaponObject;
-	});
-	
-	Slot->UnequipSlot(WeaponObject);
-	EquippedItems.Remove(Slot);
-}
-
-bool UTDEquipmentComponent::IsAnySlotAvailable(const UTDWeaponObject* WeaponObject)
+bool UTDEquipmentComponent::IsAnySlotAvailableFor(const UTDWeaponObject* WeaponObject)
 {
 	auto DataAsset = Cast<UTDWeaponAsset>(WeaponObject->GetItemAsset());
 	if (!DataAsset)
@@ -100,6 +83,7 @@ UTDEquipmentSlot* UTDEquipmentComponent::CreateSlot(FTDEquipmentSlotParams SlotP
 
 void UTDEquipmentComponent::BindSlot(UTDEquipmentSlot* SlotToBind)
 {
+	/* Бинд слота и функции происходит по имени слота. */
 	const FString FunctionName = FString(TEXT("On")) + FString(SlotToBind->GetSlotName().ToString()) + FString(TEXT("SlotChanged"));
 	SlotToBind->OnSlotChangedDelegate.AddUFunction(this, FName(*FunctionName));
 }

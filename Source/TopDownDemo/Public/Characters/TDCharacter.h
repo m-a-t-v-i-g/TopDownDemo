@@ -1,4 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/* Top Down shooter demonstration. All rights reserved.
+ * Author: matvig */
 
 #pragma once
 
@@ -23,8 +24,6 @@ class TOPDOWNDEMO_API ATDCharacter : public ACharacter, public ITDSavableInterfa
 public:
 	ATDCharacter();
 
-	virtual void Tick(float DeltaSeconds) override;
-	
 #pragma region Components
 	
 public:
@@ -93,9 +92,9 @@ public:
 
 #pragma endregion Cache
 
-public:
-	virtual void PossessedBy(AController* NewController) override;
+#pragma region Interaction
 	
+public:
 	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
 	void TryInteract(AActor* WithActor);
 
@@ -108,15 +107,16 @@ public:
 private:
 	void ProcessInteraction();
 	void InteractAfterMoving(FAIRequestID RequestID, const FPathFollowingResult& FollowResult);
-
+	
+#pragma endregion Interaction
+	
 public:
+	virtual void PossessedBy(AController* NewController) override;
+	
+	virtual void Tick(float DeltaSeconds) override;
+	
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
-
-	void OnCharacterDead();
-	
-	UPROPERTY(EditAnywhere, Category = "Health")
-	bool bIsDead = false;
 
 	UFUNCTION(BlueprintCallable, Category = "Character|Weapon")
 	void ReloadWeapon();
@@ -127,9 +127,14 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Weapon")
 	int GetAmmoInWeapon();
 
+	UPROPERTY(EditAnywhere, Category = "Health")
+	bool bIsDead = false;
+
 	UFUNCTION(BlueprintCallable, Category = "Character|Health")
 	void UseMedkit();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Health")
 	float GetHealthPercent();
+	
+	void OnCharacterDead();
 };
