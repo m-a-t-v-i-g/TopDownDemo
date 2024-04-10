@@ -73,6 +73,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	bool HasBeltWeapon(FName SlotName);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	int GetAmmoInWeapon();
+
 private:
 	TWeakObjectPtr<class UTDInventoryComponent> Inventory;
 };

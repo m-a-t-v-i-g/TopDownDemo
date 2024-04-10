@@ -124,6 +124,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Weapon")
 	bool IsArmed();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Character|Weapon")
+	int GetAmmoInWeapon();
+
 	UFUNCTION(BlueprintCallable, Category = "Character|Health")
 	void UseMedkit();
 	

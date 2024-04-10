@@ -27,8 +27,14 @@ protected:
 	TObjectPtr<class UProgressBar> HealthBar;
 
 	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UTextBlock> TextAmmo;
+
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UTDInventoryWidget> InventoryWidget;
 
+	UFUNCTION()
+	FText GetAmmoInWeapon();
+	
 	UFUNCTION()
 	float GetHealthPercent();
 

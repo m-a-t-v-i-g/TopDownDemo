@@ -186,6 +186,11 @@ bool ATDCharacter::IsArmed()
 	return WeaponComponent && WeaponComponent->HasHandedWeapon();
 }
 
+int ATDCharacter::GetAmmoInWeapon()
+{
+	return WeaponComponent->GetAmmoInWeapon();
+}
+
 void ATDCharacter::UseMedkit()
 {
 	auto Medkit = InventoryComponent->FindMedkit();

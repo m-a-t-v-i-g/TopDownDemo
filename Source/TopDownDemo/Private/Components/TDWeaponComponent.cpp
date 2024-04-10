@@ -222,3 +222,12 @@ bool UTDWeaponComponent::HasBeltWeapon(FName SlotName)
 	}
 	return WeaponSlot->WeaponActor.IsValid();
 }
+
+int UTDWeaponComponent::GetAmmoInWeapon()
+{
+	if (!HasHandedWeapon())
+	{
+		return 0;
+	}
+	return HandedWeapon->GetWeaponParams().Rounds;
+}
