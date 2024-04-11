@@ -43,10 +43,13 @@ UTDItemObject* UTDInventoryComponent::FindMedkit()
 	UTDItemObject* Medkit = nullptr;
 	if (InventoryItems.Num() > 0)
 	{
-		Medkit = *InventoryItems.FindByPredicate([](const UTDItemObject* ItemObject)
-	   {
-		   return ItemObject->IsA<UTDMedObject>();
-	   });
+		for (auto EachItem : InventoryItems)
+		{
+			if (EachItem->IsA<UTDMedObject>())
+			{
+				return EachItem;
+			}
+		}
 	}
 	return Medkit;
 }

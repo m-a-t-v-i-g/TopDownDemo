@@ -6,6 +6,7 @@
 #include "TDInteractionInterface.h"
 #include "TDInventoryComponent.h"
 #include "TDWeaponComponent.h"
+#include "AI/TDAICharacter.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Equipment/TDEquipmentComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -26,6 +27,53 @@ ATDCharacter::ATDCharacter()
 	HealthComponentClass = UTDHealthComponent::StaticClass();
 	
 	PrimaryActorTick.bCanEverTick = true;
+}
+
+void ATDCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	check(EquipmentComponent);
+	EquipmentComponent->InitEquipmentComponent();
+
+	check(WeaponComponent);
+	WeaponComponent->InitWeaponComponent(this);
+
+	check(HealthComponent);
+	HealthComponent->OnOwnerDiedDelegate.AddUObject(this, &ATDCharacter::OnCharacterDead);
+	HealthComponent->InitHealthComponent(bIsDead);
+}
+
+void ATDCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	/* При стрельбе поворачиваемся в сторону выстрела (точку, где произошел клик). */
+	if (WeaponComponent && WeaponComponent->bIsShooting)
+	{
+		if (!this->IsA<ATDAICharacter>())
+		{
+			FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetHitResultUnderCursor().Location);
+			SetActorRotation(FRotator(0.0f, TargetRotation.Yaw, 0.0f));
+		}
+	}
+}
+
+float ATDCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+							   AActor* DamageCauser)
+{
+	HealthComponent->TakeDamage(DamageAmount);
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void ATDCharacter::Destroyed()
+{
+	Super::Destroyed();
+
+	if (WeaponComponent)
+	{
+		WeaponComponent->DestroyAllWeapons();
+	}
 }
 
 void ATDCharacter::PreInitializeComponents()
@@ -137,40 +185,6 @@ void ATDCharacter::InteractAfterMoving(FAIRequestID RequestID, const FPathFollow
 	ProcessInteraction();
 }
 
-void ATDCharacter::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-
-	check(EquipmentComponent);
-	EquipmentComponent->InitEquipmentComponent();
-
-	check(WeaponComponent);
-	WeaponComponent->InitWeaponComponent(this);
-
-	check(HealthComponent);
-	HealthComponent->OnOwnerDiedDelegate.AddUObject(this, &ATDCharacter::OnCharacterDead);
-	HealthComponent->InitHealthComponent(bIsDead);
-}
-
-void ATDCharacter::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	/* При стрельбе поворачиваемся в сторону выстрела (точку, где произошел клик). */
-	if (WeaponComponent && WeaponComponent->bIsShooting)
-	{
-		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetHitResultUnderCursor().Location);
-		SetActorRotation(FRotator(0.0f, TargetRotation.Yaw, 0.0f));
-	}
-}
-
-float ATDCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-                               AActor* DamageCauser)
-{
-	HealthComponent->TakeDamage(DamageAmount);
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-}
-
 void ATDCharacter::ReloadWeapon()
 {
 	if (IsArmed())
@@ -219,4 +233,5 @@ float ATDCharacter::GetHealthPercent()
 void ATDCharacter::OnCharacterDead()
 {
 	bIsDead = true;
+	Destroy();
 }

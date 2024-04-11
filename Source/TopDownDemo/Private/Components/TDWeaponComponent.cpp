@@ -5,6 +5,7 @@
 #include "TDCharacter.h"
 #include "TDInventoryComponent.h"
 #include "TDWeaponActor.h"
+#include "AI/TDAICharacter.h"
 #include "Assets/TDAmmoAsset.h"
 #include "Assets/TDWeaponAsset.h"
 #include "GameFramework/Character.h"
@@ -24,9 +25,12 @@ void UTDWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	
 	ATDCharacter* Character = Cast<ATDCharacter>(GetOwner());
 	if (!Character) return;
-	
-	ShotLocation = Character->GetHitResultUnderCursor();
-	HandedWeapon->ShotLocation = ShotLocation;
+
+	if (!Character->IsA<ATDAICharacter>())
+	{
+		ShotLocation = Character->GetHitResultUnderCursor().Location;
+		HandedWeapon->ShotLocation = ShotLocation;
+	}
 }
 
 void UTDWeaponComponent::InitWeaponComponent(ATDCharacter* Character)
@@ -128,18 +132,38 @@ void UTDWeaponComponent::MoveHandedWeaponToBelt(FName& MovingSlot)
 	HandedWeapon = nullptr;
 }
 
-void UTDWeaponComponent::StartShot()
+void UTDWeaponComponent::StartShot(FVector FireLocation)
 {
+	ATDCharacter* Character = Cast<ATDCharacter>(GetOwner());
+	if (!Character) return;
+
 	if (!HasHandedWeapon()) return;
 
 	if (HandedWeapon->IsAmmoEmpty())
 	{
-		UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Weapon needs to reload!")), true, false);
+		if (Character->IsA<ATDAICharacter>())
+		{
+			HandedWeapon->StartReload();
+		}
+		else
+		{
+			UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Weapon needs to reload!")), true, false);
+		}
 	}
 	else if (HandedWeapon->CanShot())
 	{
-		HandedWeapon->StartShot();
+		if (!Character->IsA<ATDAICharacter>())
+		{
+			ShotLocation = Character->GetHitResultUnderCursor().Location;
+			HandedWeapon->ShotLocation = ShotLocation;
+		}
+		else
+		{
+			HandedWeapon->ShotLocation = FireLocation;
+		}
+		
 		bIsShooting = true;
+		HandedWeapon->StartShot();
 	}
 }
 
@@ -147,8 +171,8 @@ void UTDWeaponComponent::StopShot()
 {
 	if (!HasHandedWeapon()) return;
 	
-	HandedWeapon->StopShot();
 	bIsShooting = false;
+	HandedWeapon->StopShot();
 }
 
 void UTDWeaponComponent::StartReload()
@@ -232,4 +256,19 @@ int UTDWeaponComponent::GetAmmoInWeapon()
 		return 0;
 	}
 	return HandedWeapon->GetWeaponParams().Rounds;
+}
+
+void UTDWeaponComponent::DestroyAllWeapons()
+{
+	if (HasHandedWeapon())
+	{
+		HandedWeapon->Destroy();
+	}
+	for (auto EachSlot : BeltMap)
+	{
+		if (EachSlot.Value.WeaponActor.IsValid())
+		{
+			EachSlot.Value.WeaponActor->Destroy();
+		}
+	}
 }

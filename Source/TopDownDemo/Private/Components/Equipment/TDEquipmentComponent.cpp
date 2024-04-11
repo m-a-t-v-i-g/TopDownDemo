@@ -3,6 +3,7 @@
 
 #include "Equipment/TDEquipmentComponent.h"
 #include "TDCharacter.h"
+#include "TDWeaponActor.h"
 #include "TDWeaponComponent.h"
 #include "Assets/TDWeaponAsset.h"
 #include "Equipment/TDEquipmentSlot.h"
@@ -32,6 +33,8 @@ void UTDEquipmentComponent::InitEquipmentComponent()
 		return;
 	}
 	WeaponComponent = Character->GetComponentByClass<UTDWeaponComponent>();
+
+	AddStartingEquipment();
 }
 
 void UTDEquipmentComponent::EquipItem(UTDWeaponObject* WeaponObject)
@@ -50,6 +53,32 @@ void UTDEquipmentComponent::EquipItem(UTDWeaponObject* WeaponObject)
 	
 	FreeSlot->EquipSlot(WeaponObject);
 	EquippedItems.Add(FreeSlot, WeaponObject);
+}
+
+void UTDEquipmentComponent::AddStartingEquipment()
+{
+	if (StartingEquipment.Num() == 0) return;
+
+	for (auto EachItem : StartingEquipment)
+	{
+		auto WeaponActor = NewObject<ATDWeaponActor>(GetTransientPackage(), EachItem);
+		if (!WeaponActor) continue;
+
+		WeaponActor->MakeAmmoFull();
+
+		UTDWeaponObject* WeaponObject = Cast<UTDWeaponObject>(WeaponActor->CreateItemObject(UTDWeaponObject::StaticClass()));
+		check(WeaponObject);
+
+		if (IsAnySlotAvailableFor(WeaponObject))
+		{
+			EquipItem(WeaponObject);
+			WeaponActor->Destroy();
+		}
+		else
+		{
+			WeaponObject->MarkAsGarbage();
+		}
+	}
 }
 
 bool UTDEquipmentComponent::IsAnySlotAvailableFor(const UTDWeaponObject* WeaponObject)

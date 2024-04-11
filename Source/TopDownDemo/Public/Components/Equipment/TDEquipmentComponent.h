@@ -41,14 +41,20 @@ public:
 	void AddEquipmentSlot(class UTDEquipmentSlot* Slot);
 
 	void InitEquipmentComponent();
-
+	
 	/** Экипировать предмет в любой из доступных слотов. */
 	void EquipItem(UTDWeaponObject* WeaponObject);
 
+	void AddStartingEquipment();
+	
 protected:
 	/** Параметры для создания слотов экипировки. */
 	UPROPERTY(EditDefaultsOnly, Category = "Equipment")
 	TArray<FTDEquipmentSlotParams> Slots;
+
+	/** Предметы указанных классов будут помещены в свободные имеющиеся слоты. */
+	UPROPERTY(EditDefaultsOnly, Category = "Equipment")
+	TArray<TSubclassOf<class ATDWeaponActor>> StartingEquipment;
 
 	/** Действующие экипировочные слоты. */
 	UPROPERTY(EditInstanceOnly, Category = "Equipment")

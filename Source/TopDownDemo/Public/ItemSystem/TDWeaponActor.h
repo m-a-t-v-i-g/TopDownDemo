@@ -35,7 +35,7 @@ public:
 	void StartReload();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
-	FHitResult ShotLocation;
+	FVector ShotLocation;
 
 protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
@@ -62,6 +62,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	bool IsAmmoFull();
+	
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void MakeAmmoFull();
 	
 private:
 	FTimerHandle ShotTimerHandle;

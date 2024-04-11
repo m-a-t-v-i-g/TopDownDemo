@@ -24,6 +24,12 @@ class TOPDOWNDEMO_API ATDCharacter : public ACharacter, public ITDSavableInterfa
 public:
 	ATDCharacter();
 
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+							 AActor* DamageCauser) override;
+	virtual void Destroyed() override;
+
 #pragma region Components
 	
 public:
@@ -109,15 +115,8 @@ private:
 	void InteractAfterMoving(FAIRequestID RequestID, const FPathFollowingResult& FollowResult);
 	
 #pragma endregion Interaction
-	
-public:
-	virtual void PossessedBy(AController* NewController) override;
-	
-	virtual void Tick(float DeltaSeconds) override;
-	
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	                         AActor* DamageCauser) override;
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Character|Weapon")
 	void ReloadWeapon();
 

@@ -92,7 +92,7 @@ void ATDWeaponActor::StopShot()
 
 void ATDWeaponActor::StartReload()
 {
-	if (IsAmmoFull()) return;
+	if (IsAmmoFull() || bIsReloading) return;
 	
 	bIsReloading = true;
 	GetWorldTimerManager().SetTimer(ReloadTimerHandle, this, &ATDWeaponActor::MakeReload, GetWeaponAsset()->ReloadTime, false);
@@ -115,7 +115,7 @@ void ATDWeaponActor::MakeShot_Implementation()
 void ATDWeaponActor::MakeReload_Implementation()
 {
 	bIsReloading = false;
-	WeaponParams.Rounds = GetWeaponAsset()->MaxRounds;
+	MakeAmmoFull();
 	GetWorldTimerManager().ClearTimer(ReloadTimerHandle);
 
 	UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("%s was reload!"), *GetName()), true, false);
@@ -139,4 +139,9 @@ bool ATDWeaponActor::IsAmmoEmpty()
 bool ATDWeaponActor::IsAmmoFull()
 {
 	return WeaponParams.Rounds == GetWeaponAsset()->MaxRounds;
+}
+
+void ATDWeaponActor::MakeAmmoFull()
+{
+	WeaponParams.Rounds = GetWeaponAsset()->MaxRounds;
 }

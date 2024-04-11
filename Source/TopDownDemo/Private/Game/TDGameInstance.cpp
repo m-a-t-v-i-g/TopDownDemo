@@ -47,7 +47,9 @@ void UTDGameInstance::LoadFromSlot(FString SlotName)
 		AActor* RestoredActor = World->SpawnActor<AActor>(DataRecords[i].ActorClass,
 		                                                  DataRecords[i].ActorTransform.GetLocation(),
 		                                                  DataRecords[i].ActorTransform.GetRotation().Rotator());
+#if WITH_EDITORONLY_DATA
 		RestoredActor->SetActorLabel(DataRecords[i].ActorName);
+#endif
 		
 		if(UKismetSystemLibrary::DoesImplementInterface(RestoredActor, UTDSavableInterface::StaticClass()))
 		{

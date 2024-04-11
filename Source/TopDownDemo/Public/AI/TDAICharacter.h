@@ -21,4 +21,8 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+public:	
+	UFUNCTION(BlueprintCallable, Category = "Character|Interaction")
+	void ShotFromWeapon(FVector ShotLocation);
 };

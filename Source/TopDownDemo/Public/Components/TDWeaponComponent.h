@@ -32,7 +32,6 @@ public:
 	UTDWeaponComponent();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
 	void InitWeaponComponent(ATDCharacter* Character);
 
 #pragma region Handed
@@ -51,12 +50,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void MoveHandedWeaponToBelt(FName& MovingSlot);
 
-	void StartShot();
+	void StartShot(FVector FireLocation = {});
 	void StopShot();
 	void StartReload();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
-	FHitResult ShotLocation;
+	FVector ShotLocation;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
 	bool bIsShooting = false;
@@ -87,6 +86,8 @@ public:
 
 #pragma endregion Belt
 
+	void DestroyAllWeapons();
+	
 private:
 	TWeakObjectPtr<class UTDInventoryComponent> Inventory;
 };

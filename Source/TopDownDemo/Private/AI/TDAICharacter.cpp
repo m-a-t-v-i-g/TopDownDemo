@@ -3,6 +3,8 @@
 
 #include "AI/TDAICharacter.h"
 
+#include "TDWeaponComponent.h"
+
 ATDAICharacter::ATDAICharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -11,6 +13,8 @@ ATDAICharacter::ATDAICharacter()
 void ATDAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	WeaponComponent->UpdateHandedWeapon(2);
 }
 
 void ATDAICharacter::Tick(float DeltaTime)
@@ -21,5 +25,13 @@ void ATDAICharacter::Tick(float DeltaTime)
 void ATDAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ATDAICharacter::ShotFromWeapon(FVector ShotLocation)
+{
+	if (IsArmed())
+	{
+		WeaponComponent->StartShot(ShotLocation);
+	}
 }
 
